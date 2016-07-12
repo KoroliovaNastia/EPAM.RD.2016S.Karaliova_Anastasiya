@@ -8,7 +8,7 @@ namespace Primes
 {
     public class Primes
     {
-        public  bool IsPrime(int number)
+        public static bool IsPrime(int number)
         {
             if (number == 0 || number==2 || number % 2 == 0)
                 return false;
@@ -19,15 +19,17 @@ namespace Primes
             }
             return true;
         }
-        public IEnumerable<int> GetEnumerator(int limit)
+        public static IEnumerable<int> GetEnumerator(int limit)
         {
-            if (limit <= 0)
+            if (limit < 0)
+            {
                 throw new ArgumentException();
+            }
             for (int i = 0; i <= limit; i++)
             {
                 if (IsPrime(i))
                     yield return i;
-                
+   
             }
             
         }
