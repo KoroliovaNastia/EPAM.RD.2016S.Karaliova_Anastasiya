@@ -27,16 +27,17 @@ namespace DALTest
         }
 
         [TestMethod]
-        public void AddUser_AddAnExistUser_ReturnWithUnchangetCount()
+        public void AddUser_AddAnExistUser_ReturnMinusOne()
         {
             UserService service = new UserService();
-            User user1 = new User { FirstName = "Lisa", LastName = "Rich" };
-            User user2 = new User { FirstName = "Lisa", LastName = "Rich" };
-            List<int> result = new List<int> { service.AddUser(user1), service.AddUser(user2)};
+            User user1 = new User { FirstName = "Lisa", LastName = "Rich", VisaRecords = new List<Records>()};
+            User user2 = new User { FirstName = "Lisa", LastName = "Rich", VisaRecords = new List<Records>() };
+            List<int> result = new List<int> { service.AddUser(user1)};
+            result.Add(service.AddUser(user2));
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(service.Users);
-            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(-1, result[1]);
             Assert.AreEqual(1, service.Users.Count);
         }
     }
