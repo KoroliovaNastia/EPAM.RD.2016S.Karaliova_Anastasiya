@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Entities
 {
+    [Serializable]
     public class User
     {
         public int Id { get; set; }

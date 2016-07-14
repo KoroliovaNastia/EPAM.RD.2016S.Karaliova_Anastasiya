@@ -10,7 +10,7 @@ namespace DAL.Infrastructure
     {
         private int limit;
 
-        public IdIterator(int limit=0)
+        public IdIterator(int limit=1)
         {
             this.limit = limit;
         }
