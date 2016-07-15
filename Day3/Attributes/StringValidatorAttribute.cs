@@ -7,11 +7,11 @@ namespace Attributes
     [AttributeUsage(AttributeTargets.Field|AttributeTargets.Property, AllowMultiple = true)]
     public class StringValidatorAttribute : Attribute
     {
-        public readonly int length;
+        public int StrLength { get; set; }
 
         public StringValidatorAttribute(int length)
         {
-            this.length = length;
+            this.StrLength = length;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Attributes;
+using System.ComponentModel;
 
 namespace AttributesConsole
 {
@@ -12,58 +13,62 @@ namespace AttributesConsole
     {
         static void Main(string[] args)
         {
-           // Type userType = typeof(User);
-           // InstantiateUserAttribute[] instantiateUserAttribute =
-           //     (InstantiateUserAttribute[])Attribute.GetCustomAttributes(userType, typeof(InstantiateUserAttribute));
-           // MatchParameterWithPropertyAttribute[] matchParameterWithPropertyAttribute =
-           //     (MatchParameterWithPropertyAttribute[])
-           //         Attribute.GetCustomAttributes(userType, typeof(MatchParameterWithPropertyAttribute));
-           // //PropertyInfo[] prop = userType.GetProperties();
-           //Console.WriteLine(instantiateUserAttribute[0].FirsName);
-           //Console.WriteLine(instantiateUserAttribute[1].FirsName);
-           //Console.WriteLine(instantiateUserAttribute[2].FirsName);
-           // List<User> users = new List<User>();
+             Type userType = typeof(User);
+            InstantiateUserAttribute[] instantiateUserAttribute =
+                (InstantiateUserAttribute[])Attribute.GetCustomAttributes(userType, typeof(InstantiateUserAttribute));
+            MatchParameterWithPropertyAttribute[] matchParameterWithPropertyAttribute =
+                (MatchParameterWithPropertyAttribute[])
+                    Attribute.GetCustomAttributes(userType.GetConstructors()[0], typeof(MatchParameterWithPropertyAttribute));
+           
+            List<User> users = new List<User>();
 
-           // PropertyInfo[] props = typeof(User).GetProperties();
-           // foreach (PropertyInfo prop in props)
-           // {
-           //     object[] attrs = prop.GetCustomAttributes(true);
-           //     foreach (object attr in attrs)
-           //     {
-           //         InstantiateUserAttribute userAttr = attr as InstantiateUserAttribute;
-           //         if (userAttr != null)
-           //         {
-           //             //string propName = prop.P;
-           //             //string firstName = userAttr.FirsName;
-           //             //string lastName = userAttr.LastName;
-           //             //int id = userAttr.id;
-           //             users.Add(new User(userAttr.id) { FirstName = userAttr.FirsName, LastName = userAttr.LastName });
-           //         }
-           //     }
-           // }
-           // foreach (var user in users)
-           // {
-           //     Console.WriteLine("User ID:" + user.Id);
-           //     Console.WriteLine("First name:"+user.FirstName);
-           //     Console.WriteLine("Last name:" + user.LastName);
-           //     Console.WriteLine("-----------------------------");
-           // }
+            // Gets the attributes for the property.
+            AttributeCollection attributes =
+               TypeDescriptor.GetProperties(userType)[matchParameterWithPropertyAttribute[0].PropertyName].Attributes;
 
-            Type type = typeof(InstantiateUserAttribute);
+            /* Prints the default value by retrieving the DefaultValueAttribute 
+             * from the AttributeCollection. */
+            DefaultValueAttribute defIdAttribute =
+               (DefaultValueAttribute)attributes[typeof(DefaultValueAttribute)];
+            //Console.WriteLine("The default value of ID is: " + defIdAttribute.Value.ToString());
 
-            //iterating through the attribtues of the Rectangle class
-            foreach (Object attributes in type.GetCustomAttributes(false))
+            for (int i = 0; i < 3; i++)
             {
-                InstantiateUserAttribute dbi = (InstantiateUserAttribute)attributes;
-                if (null != dbi)
+
+                if(instantiateUserAttribute[i].id!=0)
+                users.Add(new User (instantiateUserAttribute[i].id) { FirstName = instantiateUserAttribute[i].FirsName, LastName=instantiateUserAttribute[i].LastName });
+                else
+                    users.Add(new User((int)defIdAttribute.Value) { FirstName = instantiateUserAttribute[i].FirsName, LastName = instantiateUserAttribute[i].LastName });
+                try
                 {
-                    Console.WriteLine("ID: {0}", dbi.id);
-                    Console.WriteLine("First Name: {0}", dbi.FirsName);
-                    Console.WriteLine("Last Name: {0}", dbi.LastName);
-                    Console.WriteLine("-----------------------------");
+                    IsValid(users[i]);
+                }
+                catch (ArgumentException e){
+                    Console.WriteLine(e.Message);
                 }
             }
+            foreach (var user in users)
+            {
+                Console.WriteLine("User ID:" + user.Id);
+                Console.WriteLine("First name:" + user.FirstName);
+                Console.WriteLine("Last name:" + user.LastName);
+                Console.WriteLine("-----------------------------");
+            }
+
+          
             Console.ReadKey();
         }
+        public static void IsValid(User user)
+        {
+            StringBuilder exception = new StringBuilder();
+            Type userType = typeof(User);
+            IntValidatorAttribute[] intValid = (IntValidatorAttribute[])Attribute.GetCustomAttributes(userType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)[0], typeof(IntValidatorAttribute));
+            if (user.Id < intValid[0].id || user.Id > intValid[0].limitId) exception.Append("Invalid bound of user ID");
+            StringValidatorAttribute[] strFirstValid = (StringValidatorAttribute[])Attribute.GetCustomAttributes(userType.GetProperty("FirstName"), typeof(StringValidatorAttribute));
+            if (user.FirstName.Length > strFirstValid[0].StrLength) exception.Append("First Name can't be longer then {0} symbols" + strFirstValid[0].StrLength);
+            StringValidatorAttribute[] strLastValid = (StringValidatorAttribute[])Attribute.GetCustomAttributes(userType.GetProperty("LastName"), typeof(StringValidatorAttribute));
+            if (user.LastName.Length > strLastValid[0].StrLength) exception.Append("Last Name can't be longer then {0} symbols" + strLastValid[0].StrLength);
+        }
     }
+    
 }
