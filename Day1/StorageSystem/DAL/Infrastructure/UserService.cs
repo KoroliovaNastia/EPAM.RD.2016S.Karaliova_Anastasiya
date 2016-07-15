@@ -5,50 +5,33 @@ using System.Text;
 using System.Threading.Tasks;
 using DAL.Interfaces;
 using DAL.Entities;
+using DAL.Repository;
 
 namespace DAL.Infrastructure
 {
     public class UserService:IUserService
     {
-        public IEnumerator<int> UserIterator { get; private set; }
-        public List<User> Users { get; set; }
- 
-        public UserService()
+        UserRepository userRepo;
+
+        public UserService(IRepository<User> repository)
         {
-            UserIterator =new IdIterator(1).GetIdEnumerator(1).GetEnumerator();
-            Users = new List<User>();
+            userRepo = (UserRepository)repository;
         }
 
-        public UserService(IEnumerator<int> iterator)
-        {
-            UserIterator = iterator;
-            Users = new List<User>();
-        }
+        
         public int AddUser(User user)
         {
-            if (!Users.Contains(user))
-            {
-                user.Id = UserIterator.Current;
-                UserIterator.MoveNext();
-                Users.Add(user);
-                return user.Id;
-            }
-            return -1;
+            return userRepo.Create(user);
         }
 
         public IEnumerable<User> SearchForUsers(Func<User, bool> predicate)
         {
-            return Users.Where(predicate).ToList(); 
+            return userRepo.Find(predicate);
         }
 
         public bool Delete(User user)
         {
-            if (Users.Contains(user))
-            {
-                Users.Remove(user);
-                return true;
-            }
-            return false;
+            return userRepo.Delete(user);
         }
     }
 }

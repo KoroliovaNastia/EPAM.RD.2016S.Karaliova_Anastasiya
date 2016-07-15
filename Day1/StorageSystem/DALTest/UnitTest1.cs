@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using DAL.Entities;
-using DAL.Infrastructure;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using DAL.Repository;
+using DAL.Entities;
+using System.Collections.Generic;
 
 namespace DALTest
 {
     [TestClass]
-    public class UserServiceTest
+    public class UserRepositoryTest
     {
         [TestMethod]
-        public void AddUser_AddThreeUsers_ReturnArrayWithThreeUsers()
+        public void Create_CreateThreeUsers_ReturnArrayWithThreeUsers()
         {
-            UserService service = new UserService();
-            User user1 = new User {FirstName = "Lisa", LastName = "Rich"};
-            User user2 = new User {FirstName = "Nick", LastName = "Name"};
-            User user3 = new User {FirstName = "Tim", LastName = "Rodny"};
+            UserRepository service = new UserRepository();
+            User user1 = new User { FirstName = "Lisa", LastName = "Rich" };
+            User user2 = new User { FirstName = "Nick", LastName = "Name" };
+            User user3 = new User { FirstName = "Tim", LastName = "Rodny" };
 
-            var result = new List<int> {service.AddUser(user1), service.AddUser(user2), service.AddUser(user3)};
+            var result = new List<int> { service.Create(user1), service.Create(user2), service.Create(user3) };
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(service.Users);
@@ -27,13 +26,13 @@ namespace DALTest
         }
 
         [TestMethod]
-        public void AddUser_AddAnExistUser_ReturnMinusOne()
+        public void CreateUser_CreateAnExistUser_ReturnMinusOne()
         {
-            UserService service = new UserService();
+            UserRepository service = new UserRepository();
             User user1 = new User { FirstName = "Lisa", LastName = "Rich", VisaRecords = new List<Records>() };
             User user2 = new User { FirstName = "Lisa", LastName = "Rich", VisaRecords = new List<Records>() };
-            List<int> result = new List<int> { service.AddUser(user1) };
-            result.Add(service.AddUser(user2));
+            List<int> result = new List<int> { service.Create(user1) };
+            result.Add(service.Create(user2));
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(service.Users);

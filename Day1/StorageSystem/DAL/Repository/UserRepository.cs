@@ -5,39 +5,59 @@ using System.Text;
 using System.Threading.Tasks;
 using DAL.Entities;
 using DAL.Interfaces;
+using DAL.Infrastructure;
 
 namespace DAL.Repository
 {
     public class UserRepository:IRepository<User>
     {
-        //public IEnumerable<User> GetAll()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public IEnumerator<int> UserIterator { get; private set; }
+        public List<User> Users { get; set; }
 
-        //public User Get(int? id)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public UserRepository()
+        {
+            UserIterator = new IdIterator(1).GetIdEnumerator(1).GetEnumerator();
+            Users = new List<User>();
+        }
+
+        public UserRepository(IEnumerator<int> iterator)
+        {
+            UserIterator = iterator;
+            Users = new List<User>();
+        }
+        public int Create(User user)
+        {
+            if (!Users.Contains(user))
+            {
+                user.Id = UserIterator.Current;
+                UserIterator.MoveNext();
+                Users.Add(user);
+                return user.Id;
+            }
+            return -1;
+        }
 
         public IEnumerable<User> Find(Func<User, bool> predicate)
         {
-            throw new NotImplementedException();
+            return Users.Where(predicate).ToList();
         }
 
-        public void Create(User item)
+        public bool Delete(User user)
         {
-            throw new NotImplementedException();
+            if (Users.Contains(user))
+            {
+                Users.Remove(user);
+                return true;
+            }
+            return false;
         }
+
+       
 
         //public void Update(User item)
         //{
         //    throw new NotImplementedException();
         //}
 
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
