@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace DAL.Infrastructure
     public class UserService:IUserService
     {
         UserRepository userRepo;
+        static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
         public event EventHandler<ActionEventArgs> Message; 
 
         public UserService(IRepository<User> repository)
@@ -53,7 +55,10 @@ namespace DAL.Infrastructure
             }
             catch (ConfigurationException e)
             {
-                NLogger.Logger.Error("Service: request to load failed:"+e.Message);
+                if (dataSwitch.Enabled)
+                {
+                    NLogger.Logger.Error("Service: request to load failed:" + e.Message);
+                }
                 throw;
             }
 
@@ -75,7 +80,10 @@ namespace DAL.Infrastructure
             }
             catch (ConfigurationException e)
             {
-                NLogger.Logger.Error("Service: request on saving failed:" + e.Message);
+                if (dataSwitch.Enabled)
+                {
+                    NLogger.Logger.Error("Service: request on saving failed:" + e.Message);
+                }
                 throw;
             }
 

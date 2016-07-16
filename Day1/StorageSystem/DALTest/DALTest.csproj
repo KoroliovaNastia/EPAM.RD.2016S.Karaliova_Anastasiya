@@ -52,6 +52,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="MasterSlaveTest.cs" />
+    <Compile Include="UserTest.cs" />
     <Compile Include="UserRepositoryTest.cs" />
     <Compile Include="UserServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
