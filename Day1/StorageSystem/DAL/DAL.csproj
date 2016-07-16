@@ -30,7 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.3.5\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Abstractions, Version=2.0.2.26, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.Abstractions.2.0.2.26\lib\net45\System.Configuration.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,7 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\User.cs" />
+    <Compile Include="Infrastructure\ActionEventArgs.cs" />
     <Compile Include="Infrastructure\IdIterator.cs" />
+    <Compile Include="Infrastructure\NLogger.cs" />
+    <Compile Include="Infrastructure\SlaveService.cs" />
     <Compile Include="Infrastructure\UserService.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
@@ -49,7 +61,15 @@
     <Compile Include="Repository\EFUnitOfWork.cs" />
     <Compile Include="Repository\UserRepository.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

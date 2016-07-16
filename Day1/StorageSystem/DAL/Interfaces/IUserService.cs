@@ -13,6 +13,7 @@ namespace DAL.Interfaces
         int AddUser(User user);
         IEnumerable<User> SearchForUsers(Func<User, bool> predicate);
         bool Delete(User user);
-
+        void Load();
+        void Save();
     }
 }

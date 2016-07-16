@@ -14,8 +14,12 @@ namespace DAL.Entities
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public Gender Gender { get; set; }
-        public IEnumerable<Records> VisaRecords { get; set; }
+        public List<Records> VisaRecords { get; set; }
 
+        public User()
+        {
+            VisaRecords = new List<Records>();
+        }
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(obj, null)) return false;
@@ -47,13 +51,13 @@ namespace DAL.Entities
             
         }
     }
-
+    [Serializable]
     public enum Gender
     {
         Male,
         Female
     }
-
+    [Serializable]
     public struct Records
     {
         public string Country { get; set; }
