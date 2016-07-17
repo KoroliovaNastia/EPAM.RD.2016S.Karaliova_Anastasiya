@@ -12,12 +12,16 @@ namespace DAL.Infrastructure
 
         public IdIterator(int limit=1)
         {
+            if(limit<0)
+                throw new ArgumentException();
             this.limit = limit;
         }
 
         public  bool IsPrime(int number)
         {
-            if (number == 0 || number == 2 || number % 2 == 0)
+            if (number == 2)
+                return true;
+            if (number == 0 || number % 2 == 0)
                 return false;
             for (int i = 3; i < number; i += 2)
             {
@@ -26,7 +30,7 @@ namespace DAL.Infrastructure
             }
             return true;
         }
-        public  IEnumerable<int> GetIdEnumerator(int start)
+        public  IEnumerable<int> GetIdEnumerator(int start=1)
         {
             if (start < 0)
             {

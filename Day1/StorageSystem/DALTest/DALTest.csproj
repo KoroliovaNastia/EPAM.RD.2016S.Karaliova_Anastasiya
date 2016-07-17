@@ -53,6 +53,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="MasterSlaveTest.cs" />
+    <Compile Include="SlaveServiceTest.cs" />
+    <Compile Include="IdIteratorTest.cs" />
     <Compile Include="UserTest.cs" />
     <Compile Include="UserRepositoryTest.cs" />
     <Compile Include="UserServiceTest.cs" />

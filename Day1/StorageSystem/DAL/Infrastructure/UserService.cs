@@ -15,13 +15,13 @@ namespace DAL.Infrastructure
 {
     public class UserService:IUserService
     {
-        UserRepository userRepo;
+        public UserRepository UserRepo { get; private set; }
         static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
         public event EventHandler<ActionEventArgs> Message; 
 
         public UserService(IRepository<User> repository)
         {
-            userRepo = (UserRepository)repository;
+            UserRepo = (UserRepository)repository;
         }
 
         
@@ -29,20 +29,20 @@ namespace DAL.Infrastructure
         {
             NLogger.Logger.Info("Service: request to add user.");
             OnMessage(new ActionEventArgs("User added/created"));
-            return userRepo.Create(user);
+            return UserRepo.Create(user);
         }
 
         public IEnumerable<User> SearchForUsers(Func<User, bool> predicate)
         {
             NLogger.Logger.Info("Service: request to search user.");
-            return userRepo.Find(predicate);
+            return UserRepo.Find(predicate);
         }
 
         public bool Delete(User user)
         {
             NLogger.Logger.Info("Service: request to delete user.");
             OnMessage(new ActionEventArgs("User deleted"));
-            return userRepo.Delete(user);
+            return UserRepo.Delete(user);
         }
 
         public void Load()
@@ -64,9 +64,9 @@ namespace DAL.Infrastructure
 
             using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
             {
-                userRepo.Users = (List<User>)loader.Deserialize(fileStr);
-                userRepo.UserIterator = new IdIterator().GetIdEnumerator(userRepo.Users.Last().Id).GetEnumerator();
-                userRepo.UserIterator.MoveNext();
+                UserRepo.Users = (List<User>)loader.Deserialize(fileStr);
+                UserRepo.UserIterator = new IdIterator().GetIdEnumerator(UserRepo.Users.Last().Id).GetEnumerator();
+                UserRepo.UserIterator.MoveNext();
             }
         }
 
@@ -89,7 +89,7 @@ namespace DAL.Infrastructure
 
             using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
             {
-                saver.Serialize(fileStr, userRepo.Users);
+                saver.Serialize(fileStr, UserRepo.Users);
             }
         }
 
