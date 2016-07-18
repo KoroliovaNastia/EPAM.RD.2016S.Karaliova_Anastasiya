@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using MyInterfaces;
+using MyLibrary;
 
 namespace DoSomethingClient
 {
@@ -21,7 +22,7 @@ namespace DoSomethingClient
             // TODO: Find first type that has DoSomething attribute and implements IDoSomething.
             // TODO: Create an instance of this type.
 
-            IDoSomething doSomethingService = null; // TODO Save instance to variable.
+            IDoSomething doSomethingService = new MyService(); // TODO Save instance to variable.
             return doSomethingService.DoSomething(data);
         }
 
@@ -36,9 +37,10 @@ namespace DoSomethingClient
             var assembly = Assembly.LoadFile(path);
             var types = assembly.GetTypes();
 
-            Type type = null; // TODO: Find first type that has DoSomething attribute and don't implement IDoSomething.
+            Type type = new AnotherService().GetType(); // TODO: Find first type that has DoSomething attribute and don't implement IDoSomething.
             // TODO: MethodInfo mi = type.GetMethod("DoSomething");
-            Result result = null;
+            MethodInfo mi = type.GetMethod("DoSomething");
+            Result result = (Result)mi.Invoke(types,null);
             // TODO: result = mi.Invoke();
 
             return result;
@@ -53,7 +55,7 @@ namespace DoSomethingClient
             // TODO: Find first type that has DoSomething attribute and implements IDoSomething.
             // TODO: Create an instance of this type.
 
-            IDoSomething doSomethingService = null; // TODO Save instance to variable.
+            IDoSomething doSomethingService = new MyService(); // TODO Save instance to variable.
             return doSomethingService.DoSomething(data);
         }
     }

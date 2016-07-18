@@ -41,12 +41,12 @@ namespace DoSomethingClient
         private static void Method1(Input input)
         {
             // TODO: Create a domain with name MyDomain.
-            AppDomain domain = null;
+            AppDomain domain =AppDomain.CreateDomain("MyDomain");
             var loader = (DomainAssemblyLoader)domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(DomainAssemblyLoader).FullName);
 
             try
             {
-                Result result = null; // TODO: Use loader here.
+                Result result = loader.Load("MyLibrary, Version=1.2.3.4, Culture=neutral, PublicKeyToken=f46a87b3d9a80705", input); // TODO: Use loader here.
 
                 Console.WriteLine("Method1: {0}", result.Value);
             }
@@ -56,6 +56,7 @@ namespace DoSomethingClient
             }
 
             // TODO: Unload domain
+            AppDomain.Unload(domain);
         }
 
         private static void Method2(Input input)
@@ -67,13 +68,13 @@ namespace DoSomethingClient
             };
 
             // TODO: Create a domain with name MyDomain and setup from appDomainSetup.
-            AppDomain domain = null;
+            AppDomain domain = AppDomain.CreateDomain("MyDomain",null,appDomainSetup); 
 
             var loader = (DomainAssemblyLoader)domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(DomainAssemblyLoader).FullName);
 
             try
             {
-                Result result = null; // TODO: Use loader here.
+                Result result = loader.LoadFrom(,input); // TODO: Use loader here.
 
                 Console.WriteLine("Method2: {0}", result.Value);
             }
@@ -83,6 +84,7 @@ namespace DoSomethingClient
             }
 
             // TODO: Unload domain
+            AppDomain.Unload(domain);
         }
     }
 }
