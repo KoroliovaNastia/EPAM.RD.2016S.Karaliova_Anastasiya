@@ -22,22 +22,31 @@ namespace ConsoleApplication1
 
         ~MyClass()
         {
-            Dispose(true);
+            Dispose(false);
         }
 
-        public virtual void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
-            Dispose(true);
+            if (disposing)
+            {
+                if (_resource != null) _resource.Dispose();
+            }
+            _disposed = true;
         }
 
-        private void Dispose(bool disposing)
+        public void Dispose()
         {
             // TODO: Add your implementations here.
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void DoSomething()
         {
             // NOTE: Manupulation with _buffer and _resource in this line.
+            if (_disposed) throw new ObjectDisposedException("Object already disposed.");
+
         }
+        
     }
 }
