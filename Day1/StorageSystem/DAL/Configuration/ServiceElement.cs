@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace DAL.Configuration
 {
-    public class ServiceElement
+    public class ServiceElement:ConfigurationElement
     {
-        [ConfigurationProperty("folderType", DefaultValue = "", IsKey = true, IsRequired = true)]
-        public string FolderType
+        [ConfigurationProperty("serviceType", DefaultValue = "", IsKey = true, IsRequired = true)]
+        public string ServiceType
         {
-            get { return ((string)(bas e["serviceType"])); }
+            get { return ((string)(base["serviceType"])); }
             set { base["serviceType"] = value; }
         }
 

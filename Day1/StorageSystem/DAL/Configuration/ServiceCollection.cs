@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Configuration
 {
+    [ConfigurationCollection(typeof(ServiceElement))]
     public class ServiceCollection: ConfigurationElementCollection
 
     {

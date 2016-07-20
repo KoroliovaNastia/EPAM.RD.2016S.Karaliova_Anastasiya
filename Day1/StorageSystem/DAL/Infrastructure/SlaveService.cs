@@ -11,6 +11,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
+using DAL.Configuration;
 
 namespace DAL.Infrastructure
 {
@@ -22,10 +23,16 @@ namespace DAL.Infrastructure
 
         public SlaveService(UserService service)
         {
-            int value = Convert.ToInt32(ConfigurationManager.AppSettings["SlaveServises"]);
-            if (slaveCount >= value)
+            var items = ServiceRegisterConfigSection.GetConfig().ServiceItems;
+            int sk = 0;
+            for (int i = 0; i < items.Count; i++)
             {
-                NLogger.Logger.Error("There is no way to create more than {0} instances of Slave class", value);
+                if (items[i].ServiceType == "Slave")
+                    sk++;
+            }
+            if (slaveCount >= sk)
+            {
+                NLogger.Logger.Error("There is no way to create more than {0} instances of Slave class", sk);
                 throw new ArgumentException("There is no way to create more than 4 instances of Slave class");
             }
             slaveCount++;
