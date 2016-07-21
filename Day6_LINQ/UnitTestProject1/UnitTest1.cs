@@ -328,5 +328,35 @@ namespace UnitTestProject1
             actualData = userListSecond.Join(NameInfo, u => u.Name, user => user.name, (u, user) => u.Name == user.name).Count();
             Assert.IsTrue(expectedData == actualData);
         }
+        [TestMethod]
+        public void JoinCollection()
+        {
+            var NameInfo = new[]
+            {
+                new {name = "Max", Info = "info about Max"},
+                new {name = "Alan", Info = "About Alan"},
+                new {name = "Alex", Info = "About Alex"}
+            }.ToList();
+
+            var expectedData = new[] {
+                new { Name = "Max", Age=23, Salary=24000m, Gender=Gender.Man ,Info="info about Max"},
+                new { Name = "Max", Age=23, Salary=24000m, Gender=Gender.Man, Info="info about Max" },
+                new { Name = "Alex", Age=45, Salary=54000m, Gender=Gender.Man, Info="About Alex" }
+
+            };
+            //var actualData = -1;
+
+            //ToDo Add code for second list
+            //return two anonymus class whis all parameters and create new mock object and compare them
+            var actualData = userListSecond.Join(NameInfo, u => u.Name, user => user.name, (u, user) => new  {
+                Name=u.Name,
+                Salary=(decimal)u.Salary,
+                Age=u.Age,
+                Gender=u.Gender,
+                Info=user.Info
+
+            }).ToArray();
+            CollectionAssert.AreEqual(expectedData, actualData);
+        }
     }
 }

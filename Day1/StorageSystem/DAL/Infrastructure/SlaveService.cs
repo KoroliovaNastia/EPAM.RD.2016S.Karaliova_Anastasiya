@@ -12,14 +12,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
 using DAL.Configuration;
+using System.Reflection;
+using System.Threading;
 
 namespace DAL.Infrastructure
 {
-    public class SlaveService:IUserService
+    public class SlaveService: MarshalByRefObject,IUserService
     {
         UserRepository userRepo;
         private static int slaveCount ;
         static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
+        private Thread thread;
 
         public SlaveService(UserService service)
         {
@@ -38,6 +41,9 @@ namespace DAL.Infrastructure
             slaveCount++;
             userRepo = service.UserRepo;
             service.Message += SlaveListener;
+            AppDomain nd = AppDomain.CreateDomain(ServiceRegisterConfigSection.GetConfig().SectionInformation.SectionName);
+            nd.CreateInstanceAndUnwrap(Assembly.GetEntryAssembly().FullName,typeof(SlaveService).FullName );
+            //Thread th=new Thread
 
         }
 
