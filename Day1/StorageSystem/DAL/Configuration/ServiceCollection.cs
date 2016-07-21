@@ -18,7 +18,7 @@ namespace DAL.Configuration
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            return ((ServiceElement)(element)).FolderType;
+            return ((ServiceElement)(element)).Path;
         }
 
         public ServiceElement this[int idx]

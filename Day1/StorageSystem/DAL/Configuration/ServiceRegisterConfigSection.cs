@@ -9,15 +9,15 @@ namespace DAL.Configuration
 {
     public class ServiceRegisterConfigSection:ConfigurationSection
     {
-        [ConfigurationProperty("ServiceRegister")]
+        [ConfigurationProperty("Services")]
         public ServiceCollection ServiceItems
         {
-            get { return ((ServiceCollection)(base["ServiceRegister"])); }
+            get { return ((ServiceCollection)(base["Services"])); }
         }
 
         public static ServiceRegisterConfigSection GetConfig()
-         { 
-             return (ServiceRegisterConfigSection)System.Configuration.ConfigurationManager.GetSection("RegisterRepositories") ?? new ServiceRegisterConfigSection(); 
+         {
+             return (ServiceRegisterConfigSection)ConfigurationManager.GetSection("ServiceRegister") ?? new ServiceRegisterConfigSection(); 
          }
 
 }

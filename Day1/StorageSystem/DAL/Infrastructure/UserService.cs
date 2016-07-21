@@ -4,16 +4,18 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using DAL.Configuration;
 using DAL.Interfaces;
 using DAL.Entities;
 using DAL.Repository;
 
 namespace DAL.Infrastructure
 {
-    public class UserService:IUserService
+    public class UserService : MarshalByRefObject, IUserService
     {
         public UserRepository UserRepo { get; private set; }
         static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
@@ -22,6 +24,8 @@ namespace DAL.Infrastructure
         public UserService(IRepository<User> repository)
         {
             UserRepo = (UserRepository)repository;
+            AppDomain nd = AppDomain.CreateDomain("Master");
+            nd.CreateInstanceAndUnwrap(Assembly.GetEntryAssembly().FullName, typeof(SlaveService).FullName);
         }
 
         

@@ -22,7 +22,7 @@ namespace DAL.Infrastructure
         UserRepository userRepo;
         private static int slaveCount ;
         static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
-        private Thread thread;
+        //private Thread thread;
 
         public SlaveService(UserService service)
         {
