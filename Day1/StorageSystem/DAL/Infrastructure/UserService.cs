@@ -19,16 +19,20 @@ namespace DAL.Infrastructure
     {
         public UserRepository UserRepo { get; private set; }
         static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
-        public event EventHandler<ActionEventArgs> Message; 
+        public event EventHandler<ActionEventArgs> Message;
 
+        public UserService()
+        {
+            UserRepo = new UserRepository();
+        }
         public UserService(IRepository<User> repository)
         {
             UserRepo = (UserRepository)repository;
-            AppDomain nd = AppDomain.CreateDomain("Master");
-            nd.CreateInstanceAndUnwrap(Assembly.GetEntryAssembly().FullName, typeof(SlaveService).FullName);
+            // AppDomain nd = AppDomain.CreateDomain("Master");
+            // nd.CreateInstanceAndUnwrap(typeof(UserService).Assembly.FullName, typeof(UserService).FullName);
         }
 
-        
+
         public int AddUser(User user)
         {
             NLogger.Logger.Info("Service: request to add user.");

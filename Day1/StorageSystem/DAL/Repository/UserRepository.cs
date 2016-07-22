@@ -12,6 +12,7 @@ using System.IO;
 
 namespace DAL.Repository
 {
+    [Serializable]
     public class UserRepository:IRepository<User>
     {
         public IEnumerator<int> UserIterator { get; set; }

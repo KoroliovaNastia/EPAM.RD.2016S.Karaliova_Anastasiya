@@ -20,10 +20,11 @@ namespace DAL.Infrastructure
     public class SlaveService: MarshalByRefObject,IUserService
     {
         UserRepository userRepo;
-        private static int slaveCount ;
+        static int slaveCount ;
         static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
         //private Thread thread;
-
+        public SlaveService()
+        { }
         public SlaveService(UserService service)
         {
             var items = ServiceRegisterConfigSection.GetConfig().ServiceItems;
@@ -41,8 +42,8 @@ namespace DAL.Infrastructure
             slaveCount++;
             userRepo = service.UserRepo;
             service.Message += SlaveListener;
-            AppDomain nd = AppDomain.CreateDomain(ServiceRegisterConfigSection.GetConfig().SectionInformation.SectionName);
-            nd.CreateInstanceAndUnwrap(Assembly.GetEntryAssembly().FullName,typeof(SlaveService).FullName );
+           // AppDomain nd = AppDomain.CreateDomain(ServiceRegisterConfigSection.GetConfig().SectionInformation.SectionName);
+            //nd.CreateInstanceAndUnwrap(Assembly.GetEntryAssembly().FullName,typeof(SlaveService).FullName );
             //Thread th=new Thread
 
         }
