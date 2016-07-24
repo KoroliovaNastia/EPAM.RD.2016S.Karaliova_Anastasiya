@@ -13,7 +13,7 @@ namespace DALTest
         {
 
             List<int> result = new List<int>();
-            foreach (var item in new IdIterator(0).GetIdEnumerator(0))
+            foreach (var item in new IdIterator(0).GetEnumerator(0))
             {
                 result.Add(item);
             }
@@ -26,7 +26,7 @@ namespace DALTest
         public void GetEnumerator_LimitIsMinusOne_ThrowAnException()
         {
             List<int> result = new List<int>();
-            foreach (var item in new IdIterator(-1).GetIdEnumerator())
+            foreach (var item in new IdIterator(-1).GetEnumerator())
             {
                 result.Add(item);
             }
@@ -36,7 +36,7 @@ namespace DALTest
         public void GetEnumerator_StartIsMinusOne_ThrowAnException()
         {
             List<int> result = new List<int>();
-            foreach (var item in new IdIterator().GetIdEnumerator(-1))
+            foreach (var item in new IdIterator().GetEnumerator(-1))
             {
                 result.Add(item);
             }
@@ -46,7 +46,7 @@ namespace DALTest
         public void GetEnumerator_LimitIsFive_ReturnArrayWhithCapacityIsFive()
         {
             List<int> result = new List<int>();
-            foreach (var item in new IdIterator(5).GetIdEnumerator())
+            foreach (var item in new IdIterator(5).GetEnumerator())
             {
                 result.Add(item);
             }

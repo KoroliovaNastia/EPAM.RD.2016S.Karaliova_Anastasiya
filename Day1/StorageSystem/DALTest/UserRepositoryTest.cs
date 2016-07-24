@@ -60,7 +60,7 @@ namespace DALTest
         [TestMethod]
         public void UserRepository_Iterator()
         {
-            IEnumerator<int> iterator = new IdIterator(5).GetIdEnumerator().GetEnumerator();
+            IEnumerator<int> iterator = new IdIterator(5).GetEnumerator().GetEnumerator();
             UserRepository repository=new UserRepository(iterator);
             repository.UserIterator.MoveNext();
             repository.UserIterator.MoveNext();

@@ -20,7 +20,7 @@ namespace DAL.Repository
 
         public UserRepository()
         {
-            UserIterator = new IdIterator().GetIdEnumerator().GetEnumerator();
+            UserIterator = new IdIterator().GetEnumerator();
             Users = new List<User>();
         }
 

@@ -15,6 +15,7 @@ using DAL.Repository;
 
 namespace DAL.Infrastructure
 {
+    [Serializable]
     public class UserService : MarshalByRefObject, IUserService
     {
         public UserRepository UserRepo { get; private set; }
@@ -73,7 +74,7 @@ namespace DAL.Infrastructure
             using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
             {
                 UserRepo.Users = (List<User>)loader.Deserialize(fileStr);
-                UserRepo.UserIterator = new IdIterator().GetIdEnumerator(UserRepo.Users.Last().Id).GetEnumerator();
+                UserRepo.UserIterator = new IdIterator().GetEnumerator(UserRepo.Users.Last().Id).GetEnumerator();
                 UserRepo.UserIterator.MoveNext();
             }
         }

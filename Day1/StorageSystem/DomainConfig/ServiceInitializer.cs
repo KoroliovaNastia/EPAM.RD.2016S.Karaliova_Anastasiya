@@ -26,25 +26,29 @@ namespace DomainConfig
                                  var serviceName = serviceSection.ServiceItems[i].Path;
                                  serviceConfigurations[serviceName] = serviceType;
                              }
-            
 
 
-             IList<IUserService> services = new List<IUserService>();
+            //if (serviceConfigurations.Keys.SingleOrDefault(s => s == "master") != null)
+            //{
+            //    var master = loader.LoadMaster();
+            //    services.Add(master);
+            //}
+            IList<IUserService> services = new List<IUserService>();
                          foreach (var serviceConfiguration in serviceConfigurations)
                              {
                                  var domain = AppDomain.CreateDomain(serviceConfiguration.Key, null, null);
                                  var type = typeof(DomainServiceLoader);
                                  var loader = (DomainServiceLoader)domain.CreateInstanceAndUnwrap(Assembly.GetAssembly(type).FullName, type.FullName);
 
-                UserService master = new UserService();   
+                //UserService master = new UserService();   
                 if (serviceConfiguration.Key == "master")
                 {
-                     master = loader.LoadMaster();
+                    var master = loader.LoadMaster();
                     services.Add(master);
                         }
                 else
                 {
-                    var service = loader.LoadSlave(master);
+                    var service = loader.LoadSlave((UserService)services.First());
                     services.Add(service);
                 }
                                  

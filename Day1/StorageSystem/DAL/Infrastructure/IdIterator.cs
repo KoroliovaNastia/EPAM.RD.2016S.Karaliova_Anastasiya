@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DAL.Infrastructure
 {
     [Serializable]
-    public class IdIterator
+    public class IdIterator:IEnumerable<int>
     {
         private int limit;
 
@@ -31,7 +31,7 @@ namespace DAL.Infrastructure
             }
             return true;
         }
-        public  IEnumerable<int> GetIdEnumerator(int start=1)
+        public  IEnumerable<int> GetEnumerator(int start)
         {
             if (start < 0)
             {
@@ -44,6 +44,16 @@ namespace DAL.Infrastructure
 
             }
 
+        }
+
+        public IEnumerator<int> GetEnumerator()
+        {
+            return GetEnumerator(1).GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
     }
 }

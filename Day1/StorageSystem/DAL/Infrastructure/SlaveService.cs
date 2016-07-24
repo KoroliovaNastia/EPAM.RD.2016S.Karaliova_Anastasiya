@@ -17,9 +17,11 @@ using System.Threading;
 
 namespace DAL.Infrastructure
 {
+    [Serializable]
     public class SlaveService: MarshalByRefObject,IUserService
     {
-        UserRepository userRepo;
+        public UserRepository UserRepo { get; private set; }
+    
         static int slaveCount ;
         static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
         //private Thread thread;
@@ -27,6 +29,7 @@ namespace DAL.Infrastructure
         { }
         public SlaveService(UserService service)
         {
+           // UserRepo = service.UserRepo;
             var items = ServiceRegisterConfigSection.GetConfig().ServiceItems;
             int sk = 0;
             for (int i = 0; i < items.Count; i++)
@@ -40,7 +43,6 @@ namespace DAL.Infrastructure
                 throw new ArgumentException("There is no way to create more than 4 instances of Slave class");
             }
             slaveCount++;
-            userRepo = service.UserRepo;
             service.Message += SlaveListener;
            // AppDomain nd = AppDomain.CreateDomain(ServiceRegisterConfigSection.GetConfig().SectionInformation.SectionName);
             //nd.CreateInstanceAndUnwrap(Assembly.GetEntryAssembly().FullName,typeof(SlaveService).FullName );
@@ -61,7 +63,7 @@ namespace DAL.Infrastructure
         public IEnumerable<User> SearchForUsers(Func<User, bool> predicate)
         {
             NLogger.Logger.Info("Slave Service: request on adding user.");
-            return userRepo.Find(predicate);
+            return UserRepo.Find(predicate);
         }
 
         public bool Delete(User user)
@@ -89,9 +91,9 @@ namespace DAL.Infrastructure
 
             using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
             {
-                userRepo.Users = (List<User>)loader.Deserialize(fileStr);
-                userRepo.UserIterator = new IdIterator().GetIdEnumerator(userRepo.Users.Last().Id).GetEnumerator();
-                userRepo.UserIterator.MoveNext();
+                UserRepo.Users = (List<User>)loader.Deserialize(fileStr);
+                UserRepo.UserIterator = new IdIterator().GetEnumerator(UserRepo.Users.Last().Id).GetEnumerator();
+                UserRepo.UserIterator.MoveNext();
             }
         }
 

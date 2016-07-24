@@ -7,6 +7,7 @@ using NLog;
 
 namespace DAL.Infrastructure
 {
+    [Serializable]
     public class NLogger
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();

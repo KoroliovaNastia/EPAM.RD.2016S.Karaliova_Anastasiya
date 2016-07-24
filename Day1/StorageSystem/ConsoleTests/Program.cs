@@ -80,12 +80,16 @@ namespace ConsoleTests
             for (int i = 0; i < services.Count; ++i)
             {
                 var service = services[i];
-                Console.Write($"Service {i} : type = ");
+                Console.Write("Service {0} : type = ",i);
                 Console.WriteLine("Current Domain: " + AppDomain.CurrentDomain.FriendlyName);
                 Console.WriteLine("IsProxy: " + RemotingServices.IsTransparentProxy(service));
                 RealProxy rp = RemotingServices.GetRealProxy(services[i]);
-                int id = (int)rp.GetType().GetField("_domainID", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(rp);
-                Console.WriteLine($"Id = {id}");
+                var fieldInfo = rp.GetType().GetField("_domainID", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (fieldInfo != null)
+                {
+                    int id = (int)fieldInfo.GetValue(rp);
+                    Console.WriteLine("Id = {0}", id);
+                }
             }
 
 

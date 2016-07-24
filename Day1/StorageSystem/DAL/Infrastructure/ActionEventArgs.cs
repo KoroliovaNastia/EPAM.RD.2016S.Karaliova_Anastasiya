@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Infrastructure
 {
+    [Serializable]
     public class ActionEventArgs : EventArgs
     {
         private readonly string message;
