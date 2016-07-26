@@ -8,47 +8,49 @@ namespace DALTest
     [TestClass]
     public class IdIteratorTest
     {
-        [TestMethod]
-        public void GetEnumerator_LimitIsZero_ReturnAnEmptyArray()
-        {
+        //[TestMethod]
+        //public void GetEnumerator_LimitIsZero_ReturnAnEmptyArray()
+        //{
 
-            List<int> result = new List<int>();
-            foreach (var item in new IdIterator(0).GetEnumerator(0))
-            {
-                result.Add(item);
-            }
-            Assert.IsNotNull(result);
-            Assert.AreEqual(0, result.Capacity);
-        }
+        //    List<int> result = new List<int>();
+        //    //foreach (var item in new IdIterator(0).GetEnumerator(0))
+        //    //{
+        //    //    result.Add(item);
+        //    //}
+
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual(0, result.Capacity);
+        //}
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void GetEnumerator_LimitIsMinusOne_ThrowAnException()
+        public void GetNextId_PrevIdMinusOne_ThrowAnException()
         {
             List<int> result = new List<int>();
-            foreach (var item in new IdIterator(-1).GetEnumerator())
-            {
-                result.Add(item);
-            }
+            //foreach (var item in new IdIterator(-1).GetEnumerator())
+            //{
+            //    result.Add(item);
+            //}
+            result.Add(IdIterator.GetNextId(-1));
         }
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void GetEnumerator_StartIsMinusOne_ThrowAnException()
-        {
-            List<int> result = new List<int>();
-            foreach (var item in new IdIterator().GetEnumerator(-1))
-            {
-                result.Add(item);
-            }
-        }
+        //[TestMethod]
+        //[ExpectedException(typeof(ArgumentException))]
+        //public void GetNextId_StartIsMinusOne_ThrowAnException()
+        //{
+        //    List<int> result = new List<int>();
+        //    foreach (var item in new IdIterator().GetEnumerator(-1))
+        //    {
+        //        result.Add(item);
+        //    }
+        //}
 
         [TestMethod]
-        public void GetEnumerator_LimitIsFive_ReturnArrayWhithCapacityIsFive()
+        public void GetNextId_LimitIsFive_ReturnArrayWhithCapacityIsFore()
         {
             List<int> result = new List<int>();
-            foreach (var item in new IdIterator(5).GetEnumerator())
+            for (int i=0;i<=5; i++)
             {
-                result.Add(item);
+                result.Add(IdIterator.GetNextId(i));
             }
             Assert.IsNotNull(result);
             Assert.AreEqual(4, result.Capacity);

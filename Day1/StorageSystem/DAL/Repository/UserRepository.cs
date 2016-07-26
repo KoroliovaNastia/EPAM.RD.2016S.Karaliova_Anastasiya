@@ -15,18 +15,20 @@ namespace DAL.Repository
     [Serializable]
     public class UserRepository:IRepository<User>
     {
-        public IEnumerator<int> UserIterator { get; set; }
+        public int LastId { get; set; }
         public List<User> Users { get; set; }
 
         public UserRepository()
         {
-            UserIterator = new IdIterator().GetEnumerator();
+            //UserIterator = new IdIterator().GetEnumerator();
+            LastId = Convert.ToInt32(ConfigurationManager.AppSettings["Id"]);
             Users = new List<User>();
         }
 
-        public UserRepository(IEnumerator<int> iterator)
+        public UserRepository(int lastId)
         {
-            UserIterator = iterator;
+           // UserIterator = iterator;
+            LastId = lastId;
             Users = new List<User>();
         }
         public int Create(User user)
@@ -34,9 +36,10 @@ namespace DAL.Repository
             NLogger.Logger.Info("Repository: request to add user.");
             if (!Users.Contains(user))
             {
-
-                user.Id = UserIterator.Current;
-                UserIterator.MoveNext();
+                user.Id = IdIterator.GetNextId(LastId);
+                ConfigurationManager.AppSettings["Id"] = LastId.ToString();
+                //user.Id = UserIterator.Current;
+                //UserIterator.MoveNext();
                 Users.Add(user);
                 NLogger.Logger.Info("Repository: user added.");
                 return user.Id;

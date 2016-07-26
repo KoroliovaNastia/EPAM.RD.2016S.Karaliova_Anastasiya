@@ -29,7 +29,7 @@ namespace DAL.Infrastructure
         { }
         public SlaveService(UserService service)
         {
-           // UserRepo = service.UserRepo;
+            UserRepo = service.UserRepo;
             var items = ServiceRegisterConfigSection.GetConfig().ServiceItems;
             int sk = 0;
             for (int i = 0; i < items.Count; i++)
@@ -92,8 +92,8 @@ namespace DAL.Infrastructure
             using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
             {
                 UserRepo.Users = (List<User>)loader.Deserialize(fileStr);
-                UserRepo.UserIterator = new IdIterator().GetEnumerator(UserRepo.Users.Last().Id).GetEnumerator();
-                UserRepo.UserIterator.MoveNext();
+                UserRepo.LastId = UserRepo.Users.Last().Id;
+                //UserRepo.UserIterator.MoveNext();
             }
         }
 
