@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 namespace DAL.Infrastructure
 {
     [Serializable]
-    public class IdIterator:IEnumerable<int>
+    public class IdIterator//:IEnumerable<int>
     {
-        private int limit;
+        //private int limit;
 
-        public IdIterator(int limit=1)
-        {
-            if(limit<0)
-                throw new ArgumentException();
-            this.limit = limit;
-        }
+        //public IdIterator(int limit=1)
+        //{
+        //    if(limit<0)
+        //        throw new ArgumentException();
+        //    this.limit = limit;
+        //}
 
-        public  bool IsPrime(int number)
+        public static bool IsPrime(int number)
         {
             if (number == 2)
                 return true;
@@ -31,29 +31,43 @@ namespace DAL.Infrastructure
             }
             return true;
         }
-        public  IEnumerable<int> GetEnumerator(int start)
+        //public  IEnumerable<int> GetEnumerator(int start)
+        //{
+        //    if (start < 0)
+        //    {
+        //        throw new ArgumentException();
+        //    }
+        //    for (int i = start; i <= limit; i++)
+        //    {
+        //        if (IsPrime(i))
+        //            yield return i;
+
+        //    }
+
+        //}
+
+        //public IEnumerator<int> GetEnumerator()
+        //{
+        //    return GetEnumerator(1).GetEnumerator();
+        //}
+
+        //System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public static int GetNextId(int prevId)
         {
-            if (start < 0)
+            if (prevId < 0)
             {
                 throw new ArgumentException();
             }
-            for (int i = start; i <= limit; i++)
+            int nextId = prevId+1;
+            while (!IsPrime(nextId))
             {
-                if (IsPrime(i))
-                    yield return i;
-
+                nextId++;
             }
-
-        }
-
-        public IEnumerator<int> GetEnumerator()
-        {
-            return GetEnumerator(1).GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
+            return nextId;
         }
     }
 }

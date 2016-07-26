@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using DAL.Infrastructure;
 
 namespace DAL.Entities
 {
     [Serializable]
-    public class User
+    public class User:IXmlSerializable
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -49,6 +52,61 @@ namespace DAL.Entities
             return hash;
             }
             
+        }
+
+        public System.Xml.Schema.XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(System.Xml.XmlReader reader)
+        {
+            reader.MoveToContent();
+            Id = Convert.ToInt32(reader.GetAttribute("Id"));
+            FirstName = reader.GetAttribute("FirstName");
+            LastName = reader.GetAttribute("LastName");
+            Gender = reader.GetAttribute("Gender")=="Male"?Gender.Male:Gender.Female;
+            Boolean isEmptyElement = reader.IsEmptyElement; // (1)
+            reader.ReadStartElement();
+            if (!isEmptyElement) // (1)
+            {
+                DateOfBirth = DateTime.ParseExact(reader.
+                    ReadElementString("DateOfBirth"), "yyyy-MM-dd", null);
+
+                reader.ReadEndElement();
+            }
+            //reader.ReadStartElement("VisaRecords");
+            //reader.MoveToAttribute("count");
+            //int count = int.Parse(reader.Value);
+
+            //var otherSer = new XmlSerializer(typeof(Records));
+            //for (int i = 0; i < count; i++)
+            //{
+            //    var other = (Records)otherSer.Deserialize(reader);
+            //    Records.Add(other);
+            //}
+
+            reader.ReadEndElement();
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer)
+        {
+            writer.WriteAttributeString("Id", Id.ToString());
+            writer.WriteAttributeString("FirstName", FirstName);
+            writer.WriteAttributeString("LastName", LastName);
+            writer.WriteAttributeString("Gender", Gender.ToString());
+            if (DateOfBirth != DateTime.MinValue)
+                writer.WriteElementString("Birthday",
+                    DateOfBirth.ToString("yyyy-MM-dd"));
+            if (VisaRecords != null)
+            {
+                foreach (var item in VisaRecords)
+                {
+                    writer.WriteAttributeString("Country", item.Country);
+                    writer.WriteAttributeString("VisaRecords Start", item.Start.ToString());
+                    writer.WriteAttributeString("VisaRecords End", item.End.ToString());
+                }
+            }
         }
     }
     [Serializable]

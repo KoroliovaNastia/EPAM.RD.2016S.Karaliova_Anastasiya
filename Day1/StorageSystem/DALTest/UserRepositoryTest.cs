@@ -60,13 +60,13 @@ namespace DALTest
         [TestMethod]
         public void UserRepository_Iterator()
         {
-            IEnumerator<int> iterator = new IdIterator(5).GetEnumerator().GetEnumerator();
+            int iterator = 0;
             UserRepository repository=new UserRepository(iterator);
-            repository.UserIterator.MoveNext();
-            repository.UserIterator.MoveNext();
-            repository.UserIterator.MoveNext();
-            repository.UserIterator.MoveNext();
-            Assert.AreEqual(5,repository.UserIterator.Current);
+            repository.LastId=IdIterator.GetNextId(iterator);
+            repository.LastId = IdIterator.GetNextId(iterator);
+            repository.LastId = IdIterator.GetNextId(iterator);
+            repository.LastId = IdIterator.GetNextId(iterator);
+            Assert.AreEqual(5,repository.LastId);
         }
         [TestMethod]
         public void Delete_DeleteUnExistUser_ReturnFalse()

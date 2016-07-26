@@ -74,8 +74,8 @@ namespace DAL.Infrastructure
             using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
             {
                 UserRepo.Users = (List<User>)loader.Deserialize(fileStr);
-                UserRepo.UserIterator = new IdIterator().GetEnumerator(UserRepo.Users.Last().Id).GetEnumerator();
-                UserRepo.UserIterator.MoveNext();
+                UserRepo.LastId = UserRepo.Users.Last().Id;
+               // UserRepo.UserIterator.MoveNext();
             }
         }
 
