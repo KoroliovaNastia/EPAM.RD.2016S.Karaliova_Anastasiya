@@ -16,9 +16,9 @@ namespace DAL.Configuration
         }
 
         public static ServiceRegisterConfigSection GetConfig()
-         {
-             return (ServiceRegisterConfigSection)ConfigurationManager.GetSection("ServiceRegister") ?? new ServiceRegisterConfigSection(); 
-         }
+        {
+            return (ServiceRegisterConfigSection)ConfigurationManager.GetSection("ServiceRegister") ?? new ServiceRegisterConfigSection();
+        }
 
-}
+    }
 }

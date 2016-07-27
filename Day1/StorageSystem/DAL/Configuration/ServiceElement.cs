@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,5 +24,17 @@ namespace DAL.Configuration
             set { base["path"] = value; }
         }
 
+        [ConfigurationProperty("ip",DefaultValue ="", IsKey =false, IsRequired =false)]
+        public string Ip
+        {
+            get { return ((string)base["ip"]); }
+            set { base["ip"] = value; }
+        }
+        [ConfigurationProperty("port", DefaultValue = 0, IsKey = false, IsRequired = false)]
+        public int Port
+        {
+            get { return ((int)(base["port"])); }
+            set { base["port"] = value; }
+        }
     }
 }
