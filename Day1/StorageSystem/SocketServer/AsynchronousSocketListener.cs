@@ -1,4 +1,5 @@
-﻿using SocketClient;
+﻿using DAL.Configuration;
+using SocketClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,12 +37,15 @@ namespace SocketServer
             // Data buffer for incoming data.
             byte[] bytes = new Byte[1024];
 
+            var serviceSection = ServiceRegisterConfigSection.GetConfig().ServiceItems[1];
+            var port = serviceSection.Port;
+            var ip = serviceSection.Ip;
             // Establish the local endpoint for the socket.
             // The DNS name of the computer
             // running the listener is "host.contoso.com".
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
+            IPHostEntry ipHostInfo = Dns.GetHostEntry("localhost");
+            IPAddress ipAddress = IPAddress.Parse(ip);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
 
             // Create a TCP/IP socket.
             Socket listener = new Socket(AddressFamily.InterNetwork,

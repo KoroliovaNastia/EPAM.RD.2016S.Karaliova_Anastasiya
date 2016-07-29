@@ -38,43 +38,18 @@ namespace ConsoleTests
 
             // Create the second AppDomain.
             AppDomain ad2 = AppDomain.CreateDomain("AD #2", null, ads);
-            //AppDomain ad3 = AppDomain.CreateDomain("AD #3", null, null);
-            //AppDomain ad4 = AppDomain.CreateDomain("AD #4", null, null);
-            // Create an instance of MarshalbyRefType in the second AppDomain. 
             // A proxy to the object is returned.
             MarshalByRefType mbrt =
                 (MarshalByRefType)ad2.CreateInstanceAndUnwrap(
                     exeAssembly,
                     typeof(MarshalByRefType).FullName
                 );
-          //  UserRepository repo = new UserRepository();
-          //  UserService service = (UserService)ad3.CreateInstanceAndUnwrap(Assembly.GetAssembly(typeof(UserService)).FullName, typeof(UserService).FullName);
-           // service = new UserService(repo);
+            //  UserRepository repo = new UserRepository();
+            //  UserService service = (UserService)ad3.CreateInstanceAndUnwrap(Assembly.GetAssembly(typeof(UserService)).FullName, typeof(UserService).FullName);
+            // service = new UserService(repo);
             // Call a method on the object via the proxy, passing the 
             // default AppDomain's friendly name in as a parameter.
             mbrt.SomeMethod(callingDomainName);
-
-            //service.Load();
-            //foreach (var user in service.UserRepo.Users)
-            //{
-            //    Console.WriteLine("Load service");
-            //    Console.WriteLine(user.FirstName);
-            //    Console.WriteLine(user.LastName);
-            //    Console.WriteLine(user.Gender);
-            //    Console.WriteLine(user.DateOfBirth);
-            //}
-
-            // SlaveService slave = (SlaveService)ad4.CreateInstanceAndUnwrap(Assembly.GetAssembly(typeof(SlaveService)).FullName, typeof(SlaveService).FullName);
-            //slave = new SlaveService(service);
-            //try
-            //{
-            //    slave.Load();
-            //    Console.WriteLine("Load slave");
-            //}
-            //catch (ApplicationException)
-            //{
-            //    Console.WriteLine("Slave not load any");
-            //}
 
             IList<IUserService> services = ServiceInitializer.InitializeServices().ToList();
             for (int i = 0; i < services.Count; ++i)
@@ -96,7 +71,7 @@ namespace ConsoleTests
 
             // Unload the second AppDomain. This deletes its object and 
             // invalidates the proxy object.
-            AppDomain.Unload(ad2);
+           // AppDomain.Unload(ad2);
             //AppDomain.Unload(ad3);
             //AppDomain.Unload(ad4);
             try

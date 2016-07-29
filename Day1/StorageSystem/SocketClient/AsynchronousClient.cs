@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,7 +25,7 @@ namespace SocketClient
     public class AsynchronousClient
     {
         // The port number for the remote device.
-        private const int port = 11000;
+        //private const int port = 11000;
 
         // ManualResetEvent instances signal completion.
         private static ManualResetEvent connectDone =
@@ -42,11 +43,14 @@ namespace SocketClient
             // Connect to a remote device.
             try
             {
+                var serviceSection = ServiceRegisterConfigSection.GetConfig().ServiceItems[1];
+                var port = serviceSection.Port;
+                var ip = serviceSection.Ip;
                 // Establish the remote endpoint for the socket.
                 // The name of the 
                 // remote device is "host.contoso.com".
-                IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                IPHostEntry ipHostInfo = Dns.GetHostEntry("localhost");
+                IPAddress ipAddress = IPAddress.Parse(ip);
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
                 // Create a TCP/IP socket.
@@ -71,7 +75,8 @@ namespace SocketClient
 
                 // Release the socket.
                 client.Shutdown(SocketShutdown.Both);
-                client.Close();
+                Console.ReadKey();
+                //client.Close();
 
             }
             catch (Exception e)
