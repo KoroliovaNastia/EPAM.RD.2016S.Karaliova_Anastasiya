@@ -34,7 +34,7 @@ namespace DAL.Repository
         public int Create(User user)
         {
             NLogger.Logger.Info("Repository: request to add user.");
-            if (!Users.Contains(user))
+            if (!Users.Contains(user) && new UserValidation().Validate(user))
             {
                 user.Id = IdIterator.GetNextId(LastId);
                 ConfigurationManager.AppSettings["Id"] = LastId.ToString();

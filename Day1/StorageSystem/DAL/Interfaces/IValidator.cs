@@ -7,9 +7,8 @@ using DAL.Entities;
 
 namespace DAL.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IValidator
     {
-        IRepository<User> Users { get; }
-        void Save();
+       bool Validate(User user);
     }
 }

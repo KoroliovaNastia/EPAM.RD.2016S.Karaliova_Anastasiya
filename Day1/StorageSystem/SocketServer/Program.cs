@@ -5,7 +5,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using DAL.Infrastructure;
+using DAL.Interfaces;
+using DomainConfig;
 
 namespace SocketServer
 {
@@ -13,9 +17,23 @@ namespace SocketServer
     {
         public static void Main(string[] args)
         {
-            AsynchronousSocketListener.StartListening();
-            
-                //SL();
+            IList<IUserService> services = ServiceInitializer.InitializeServices().ToList();
+            IList<SlaveService> slaves = ServiceInitializer.GetSlaves(services).ToList();
+            foreach (var slave in slaves)
+            {
+                var slaveThread = new Thread(() => { AsynchronousSocketListener.StartListening(slave.ServiceConfigInfo); });
+                //slaveThread.IsBackground = true;
+                slaveThread.Start();
+            }
+           // ServiceConfigInfo ser1 = new ServiceConfigInfo() { IpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 11000) };
+           // var slaveThread1 = new Thread(() => { AsynchronousSocketListener.StartListening(ser1); });
+           //// slaveThread.IsBackground = true;
+           // slaveThread1.Start();
+           // ServiceConfigInfo ser2 = new ServiceConfigInfo() { IpEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 11001) };
+           // var slaveThread2 = new Thread(() => { AsynchronousSocketListener.StartListening(ser2); });
+           // // slaveThread.IsBackground = true;
+           // slaveThread2.Start();
+                //SL(2);
             
         }
         public static void SL(int i)

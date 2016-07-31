@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using DAL.Configuration;
@@ -20,7 +21,10 @@ namespace DAL.Infrastructure
     {
         public UserRepository UserRepo { get; private set; }
         static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
-        public event EventHandler<ActionEventArgs> Message;
+        private ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
+        public ServiceConfigInfo ServiceConfigInfo { get; set; }
+        //public event EventHandler<ActionEventArgs> Message;
+        public ServiceComunicator Comunicator { get; set; }
 
         public UserService()
         {
@@ -29,84 +33,130 @@ namespace DAL.Infrastructure
         public UserService(IRepository<User> repository)
         {
             UserRepo = (UserRepository)repository;
-            // AppDomain nd = AppDomain.CreateDomain("Master");
-            // nd.CreateInstanceAndUnwrap(typeof(UserService).Assembly.FullName, typeof(UserService).FullName);
         }
 
 
         public int AddUser(User user)
         {
-            NLogger.Logger.Info("Service: request to add user.");
-            OnMessage(new ActionEventArgs("User added/created"));
-            return UserRepo.Create(user);
+            readerWriterLock.EnterWriteLock();
+            try
+            {
+
+                NLogger.Logger.Info("Service: request to add user.");
+                OnMessage(new ActionEventArgs(){Message = "User added/created"});
+                return UserRepo.Create(user);
+            }
+            finally
+            {
+                readerWriterLock.ExitWriteLock();
+            }
         }
 
         public IEnumerable<User> SearchForUsers(Func<User, bool> predicate)
         {
-            NLogger.Logger.Info("Service: request to search user.");
-            return UserRepo.Find(predicate);
+            readerWriterLock.EnterReadLock();
+            try
+            {
+                NLogger.Logger.Info("Service: request to search user.");
+                return UserRepo.Find(predicate);
+            }
+            finally
+            {
+                readerWriterLock.ExitReadLock();
+            }
         }
 
         public bool Delete(User user)
         {
-            NLogger.Logger.Info("Service: request to delete user.");
-            OnMessage(new ActionEventArgs("User deleted"));
-            return UserRepo.Delete(user);
+            readerWriterLock.EnterWriteLock();
+            try
+            {
+
+                NLogger.Logger.Info("Service: request to delete user.");
+                OnMessage(new ActionEventArgs{Message = "User deleted"});
+                return UserRepo.Delete(user);
+            }
+            finally
+            {
+                readerWriterLock.ExitWriteLock();
+            }
+
         }
 
         public void Load()
         {
-            var loader = new XmlSerializer(typeof(List<User>));
-            string file;
+            readerWriterLock.EnterReadLock();
             try
             {
-                file = ConfigurationManager.AppSettings["xmlfile"];
-            }
-            catch (ConfigurationException e)
-            {
-                if (dataSwitch.Enabled)
+                var loader = new XmlSerializer(typeof (List<User>));
+                string file;
+                try
                 {
-                    NLogger.Logger.Error("Service: request to load failed:" + e.Message);
+                    file = ConfigurationManager.AppSettings["xmlfile"];
                 }
-                throw;
-            }
+                catch (ConfigurationException e)
+                {
+                    if (dataSwitch.Enabled)
+                    {
+                        NLogger.Logger.Error("Service: request to load failed:" + e.Message);
+                    }
+                    throw;
+                }
 
-            using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
+                using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
+                {
+                    UserRepo.Users = (List<User>) loader.Deserialize(fileStr);
+                    UserRepo.LastId = UserRepo.Users.Last().Id;
+                    // UserRepo.UserIterator.MoveNext();
+                }
+            }
+            finally
             {
-                UserRepo.Users = (List<User>)loader.Deserialize(fileStr);
-                UserRepo.LastId = UserRepo.Users.Last().Id;
-               // UserRepo.UserIterator.MoveNext();
+                readerWriterLock.ExitReadLock();
             }
         }
 
         public void Save()
         {
-            var saver = new XmlSerializer(typeof(List<User>));
-            string file;
+            readerWriterLock.EnterWriteLock();
             try
             {
-                file = ConfigurationManager.AppSettings["xmlfile"];
-            }
-            catch (ConfigurationException e)
-            {
-                if (dataSwitch.Enabled)
+                var saver = new XmlSerializer(typeof (List<User>));
+                string file;
+                try
                 {
-                    NLogger.Logger.Error("Service: request on saving failed:" + e.Message);
+                    file = ConfigurationManager.AppSettings["xmlfile"];
                 }
-                throw;
-            }
+                catch (ConfigurationException e)
+                {
+                    if (dataSwitch.Enabled)
+                    {
+                        NLogger.Logger.Error("Service: request on saving failed:" + e.Message);
+                    }
+                    throw;
+                }
 
-            using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
+                using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
+                {
+                    saver.Serialize(fileStr, UserRepo.Users);
+                }
+            }
+            finally
             {
-                saver.Serialize(fileStr, UserRepo.Users);
+                readerWriterLock.ExitWriteLock();
             }
         }
 
         private void OnMessage(ActionEventArgs e)
         {
-            if (Message != null) Message(this, e);
+            //if (Message != null) Message(this, e);
+            if(Comunicator!=null) Comunicator.Send(e);
 
         }
 
+        public void AddConnectionInfo(ServiceConfigInfo info)
+        {
+            ServiceConfigInfo = info;
+        }
     }
 }

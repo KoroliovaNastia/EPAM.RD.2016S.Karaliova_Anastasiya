@@ -59,6 +59,14 @@
       <Project>{137ba559-b78d-4ca5-950f-810c28dc8e6d}</Project>
       <Name>DomainConfig</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SocketClient\SocketClient.csproj">
+      <Project>{4190ad8f-7b55-4517-b0da-e3f944b3c269}</Project>
+      <Name>SocketClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SocketServer\SocketServer.csproj">
+      <Project>{db1594f2-bee4-4621-97e9-1057ad279397}</Project>
+      <Name>SocketServer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

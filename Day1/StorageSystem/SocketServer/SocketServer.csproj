@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SocketServer</RootNamespace>
     <AssemblyName>SocketServer</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,6 +56,10 @@
     <ProjectReference Include="..\DAL\DAL.csproj">
       <Project>{EDF7216E-D7A7-4C5C-A684-B44E68116AF1}</Project>
       <Name>DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DomainConfig\DomainConfig.csproj">
+      <Project>{137ba559-b78d-4ca5-950f-810c28dc8e6d}</Project>
+      <Name>DomainConfig</Name>
     </ProjectReference>
     <ProjectReference Include="..\SocketClient\SocketClient.csproj">
       <Project>{4190AD8F-7B55-4517-B0DA-E3F944B3C269}</Project>
