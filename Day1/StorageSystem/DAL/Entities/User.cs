@@ -1,22 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using DAL.Infrastructure;
+﻿
 
 namespace DAL.Entities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.IO;
+    using System.Xml.Serialization;
+    using System.Runtime.Serialization;
+    using System.Xml.Linq;
+    using System.Xml;
+
     [Serializable]
-    public class User:IXmlSerializable
+    [DataContract]
+    public class User//:IXmlSerializable
     {
+        [DataMember]
         public int Id { get; set; }
+        [DataMember]
         public string FirstName { get; set; }
+        [DataMember]
         public string LastName { get; set; }
+        [DataMember]
         public DateTime DateOfBirth { get; set; }
+        [DataMember]
         public Gender Gender { get; set; }
+        [DataMember]
         public List<Records> VisaRecords { get; set; }
 
         public User()
@@ -59,67 +68,79 @@ namespace DAL.Entities
             return null;
         }
 
-        public void ReadXml(System.Xml.XmlReader reader)
+        public void ReadXml(XmlReader reader)
         {
-            reader.MoveToContent();
-            Id = Convert.ToInt32(reader.GetAttribute("Id"));
-            FirstName = reader.GetAttribute("FirstName");
-            LastName = reader.GetAttribute("LastName");
-            Gender = reader.GetAttribute("Gender")=="Male"?Gender.Male:Gender.Female;
-            Boolean isEmptyElement = reader.IsEmptyElement; // (1)
-            reader.ReadStartElement();
-            if (!isEmptyElement) // (1)
-            {
-                DateOfBirth = DateTime.ParseExact(reader.
-                    ReadElementString("DateOfBirth"), "yyyy-MM-dd", null);
+            
 
-                reader.ReadEndElement();
-            }
-            //reader.ReadStartElement("VisaRecords");
-            //reader.MoveToAttribute("count");
-            //int count = int.Parse(reader.Value);
+            //reader.ReadEndElement();
+            var doc = new XDocument();
 
-            //var otherSer = new XmlSerializer(typeof(Records));
-            //for (int i = 0; i < count; i++)
-            //{
-            //    var other = (Records)otherSer.Deserialize(reader);
-            //    Records.Add(other);
-            //}
 
-            reader.ReadEndElement();
+            //int.TryParse(doc.Descendants("LastId").SingleOrDefault().Value, out this.lastUserId); 
+            List<User> users;
+            
+
+                Id = Convert.ToInt32(reader.GetAttribute("Id"));
+                FirstName = reader.GetAttribute("FirstName");
+                LastName = reader.GetAttribute("LastName");
+                Gender = reader.GetAttribute("Gender") == "Male" ? Gender.Male : Gender.Female;
+                DateOfBirth =Convert.ToDateTime(reader.ReadElementString("DateOfBirth"))==null?DateTime.Now: Convert.ToDateTime(reader.ReadElementString("DateOfBirth"));
+
+                VisaRecords = reader.GetAttribute("Records").Select(vr => new Records
+                {
+                    Country = reader.GetAttribute("Country"),
+                    Start = Convert.ToDateTime(reader.GetAttribute("Start")),
+                    End = Convert.ToDateTime(reader.GetAttribute("Start"))
+                }).ToList();
+                
+            
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer)
+
+        /// <summary> 
+        /// Converts an object into its XML representation. 
+        /// </summary> 
+        /// <param name="xmlWriter"> XmlWriter instance.</param> 
+        public void WriteXml(XmlWriter writer)
         {
+
             writer.WriteAttributeString("Id", Id.ToString());
-            writer.WriteAttributeString("FirstName", FirstName);
-            writer.WriteAttributeString("LastName", LastName);
-            writer.WriteAttributeString("Gender", Gender.ToString());
-            if (DateOfBirth != DateTime.MinValue)
-                writer.WriteElementString("Birthday",
-                    DateOfBirth.ToString("yyyy-MM-dd"));
-            if (VisaRecords != null)
-            {
-                foreach (var item in VisaRecords)
-                {
-                    writer.WriteAttributeString("Country", item.Country);
-                    writer.WriteAttributeString("VisaRecords Start", item.Start.ToString());
-                    writer.WriteAttributeString("VisaRecords End", item.End.ToString());
-                }
-            }
+                         writer.WriteAttributeString("FirstName", FirstName);
+                         writer.WriteAttributeString("LastName", LastName);
+                         writer.WriteAttributeString("Gender", Gender.ToString());
+                         if (DateOfBirth != DateTime.MinValue)
+                                 writer.WriteElementString("Birthday",
+                                     DateOfBirth.ToString("yyyy-MM-dd"));
+                         if (VisaRecords != null)
+                             {
+                                 foreach (var item in VisaRecords)
+                                     {
+                                         writer.WriteAttributeString("Country", item.Country);
+                                         writer.WriteAttributeString("VisaRecords Start", item.Start.ToString());
+                                         writer.WriteAttributeString("VisaRecords End", item.End.ToString());
+                                     }
+                             }
+
         }
     }
     [Serializable]
+    [DataContract]
     public enum Gender
     {
+        [EnumMember]
         Male,
+        [EnumMember]
         Female
     }
     [Serializable]
+    [DataContract]
     public struct Records
     {
+        [DataMember]
         public string Country { get; set; }
+        [DataMember]
         public DateTime Start { get; set; }
+        [DataMember]
         public DateTime End { get; set; }
     }
 

@@ -1,28 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAL.Infrastructure
+﻿namespace DAL.Infrastructure
 {
+    using System;
+    using System.Net.Sockets;
+    using System.Text;
+
     [Serializable]
     public class ActionEventArgs : EventArgs
     {
         private string message;
 
-        //public ActionEventArgs()
-        //{
-
-        //}
-
-        //public ActionEventArgs(string report)
-        //{
-        //    if(report==null)
-        //        throw new ArgumentNullException();
-        //    message = report;
-        //}
         // Client socket.
         public Socket workSocket = null;
         // Size of receive buffer.

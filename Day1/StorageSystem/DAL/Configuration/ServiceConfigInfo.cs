@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿//----------------------------------------------------------------------- 
+// <copyright file="ServiceConfigInfo.cs" company="No Company"> 
+//     No Company. All rights reserved. 
+// </copyright> 
+//----------------------------------------------------------------------- 
 namespace DAL.Configuration
 {
+    using System;
+    using System.Net;
+
+    /// <summary>
+    /// Data for any service
+    /// </summary>
     [Serializable]
     public class ServiceConfigInfo
     {

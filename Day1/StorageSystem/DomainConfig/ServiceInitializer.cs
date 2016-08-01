@@ -1,18 +1,17 @@
-﻿using DAL.Configuration;
-using DAL.Infrastructure;
-using DAL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DomainConfig
+﻿namespace DomainConfig
 {
+    using DAL.Configuration;
+    using DAL.Infrastructure;
+    using DAL.Interfaces;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Reflection;
+
     public static class ServiceInitializer
     {
+        //private static ServiceHost serviceHost;
         public static UserService GetMaster(IEnumerable<IUserService> serices)
         {
             return (UserService)serices.Single(s => s is UserService);
@@ -78,5 +77,15 @@ namespace DomainConfig
             return services;
 
         }
+        //private static void StartWcfService(IUserService service, string address)
+        // { 
+        //     serviceHost = new ServiceHost(service); 
+        //     var behaviour = serviceHost.Description.Behaviors.Find<ServiceBehaviorAttribute>(); 
+        //     behaviour.IncludeExceptionDetailInFaults = true; 
+        //     behaviour.InstanceContextMode = InstanceContextMode.Single; 
+        //     serviceHost.AddServiceEndpoint(typeof(IUserService), new NetTcpBinding(), $"net.tcp://{address}"); 
+        //     serviceHost.Open(); 
+        // }
+
     }
 }

@@ -1,16 +1,13 @@
-﻿using DAL.Configuration;
-using SocketClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace SocketServer
+﻿namespace SocketServer
 {
+    using DAL.Configuration;
+    using System;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
+
+
     public class StateObject
     {
         // Client  socket.
@@ -50,22 +47,24 @@ namespace SocketServer
             {
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
-
                 while (true)
                 {
+                   
+                    
                     // Set the event to nonsignaled state.
                     allDone.Reset();
 
                     // Start an asynchronous socket to listen for connections.
                     Console.WriteLine("Server {0} start",listenerInfo.Path);
                     Console.WriteLine("Waiting for a connection...");
+                    //allDone.WaitOne();
+
                     listener.BeginAccept(
                         new AsyncCallback(AcceptCallback),
                         listener);
 
                     // Wait until a connection is made before continuing.
                     allDone.WaitOne();
-                   
                 }
 
             }
@@ -91,13 +90,8 @@ namespace SocketServer
             // Create the state object.
             StateObject state = new StateObject();
             state.workSocket = handler;
-            
-            
-                handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReadCallback), state);
-            
-            //handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-            // new AsyncCallback(ReadCallback), state);
+            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                new AsyncCallback(ReadCallback), state);
         }
 
         public static void ReadCallback(IAsyncResult ar)
@@ -129,9 +123,7 @@ namespace SocketServer
                         content.Length, content);
                     // Echo the data back to the client.
                     Send(handler, content);
-                    //handler.EndReceive(ar);
-                    //handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    //new AsyncCallback(ReadCallback), state);
+
                 //}
                 //else
                 //{
@@ -139,6 +131,7 @@ namespace SocketServer
                 //    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                 //    new AsyncCallback(ReadCallback), state);
                 //}
+               
             }
         }
 
@@ -163,7 +156,7 @@ namespace SocketServer
                 int bytesSent = handler.EndSend(ar);
                 Console.WriteLine("Sent {0} bytes to client.", bytesSent);
 
-                //handler.EndReceive(ar);
+                //handler.AcceptAsync();
                 //handler.Shutdown(SocketShutdown.Both);
                 //handler.Close();
 

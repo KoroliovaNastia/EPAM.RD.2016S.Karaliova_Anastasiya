@@ -1,15 +1,12 @@
-﻿using DAL.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace SocketClient
+﻿namespace SocketClient
 {
+    using DAL.Configuration;
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
+
     public class StateObject
     {
         // Client socket.
@@ -62,11 +59,11 @@ namespace SocketClient
                         new AsyncCallback(ConnectCallback), client);
                     connectDone.WaitOne();
 
-                    ////Send test data to the remote device.
+                    //Send test data to the remote device.
                     //Send(client, message);
                     //sendDone.WaitOne();
 
-                    //// Receive the response from the remote device.
+                    // Receive the response from the remote device.
                     //Receive(client);
                     //receiveDone.WaitOne();
 
@@ -77,11 +74,9 @@ namespace SocketClient
                     //    var quit = Console.ReadKey();
                     //    if (quit.Key == ConsoleKey.Escape)
                     //        break;
-                    //    StartClient();
                     //}
                     // Release the socket.
                     //client.Shutdown(SocketShutdown.Both);
-                    
                 }
                 Console.WriteLine("Enter to continue.");
 

@@ -60,12 +60,12 @@ namespace DALTest
         [TestMethod]
         public void UserRepository_Iterator()
         {
-            int iterator = 0;
-            UserRepository repository=new UserRepository(iterator);
-            repository.LastId=IdIterator.GetNextId(iterator);
-            repository.LastId = IdIterator.GetNextId(iterator);
-            repository.LastId = IdIterator.GetNextId(iterator);
-            repository.LastId = IdIterator.GetNextId(iterator);
+            UserRepository repository = new UserRepository(0);
+            repository.LastId= IdIterator.GetNextId(repository.LastId);
+            repository.LastId = IdIterator.GetNextId(repository.LastId);
+            repository.LastId = IdIterator.GetNextId(repository.LastId);
+            repository.LastId = IdIterator.GetNextId(repository.LastId);
+            
             Assert.AreEqual(5,repository.LastId);
         }
         [TestMethod]

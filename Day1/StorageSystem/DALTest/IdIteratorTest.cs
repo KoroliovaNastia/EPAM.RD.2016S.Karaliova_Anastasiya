@@ -44,17 +44,17 @@ namespace DALTest
         //    }
         //}
 
-        [TestMethod]
-        public void GetNextId_LimitIsFive_ReturnArrayWhithCapacityIsFore()
-        {
-            List<int> result = new List<int>();
-            for (int i=0;i<=5; i++)
-            {
-                result.Add(IdIterator.GetNextId(i));
-            }
-            Assert.IsNotNull(result);
-            Assert.AreEqual(4, result.Capacity);
-        }
+        //[TestMethod]
+        //public void GetNextId_LimitIsFive_ReturnArrayWhithCapacityIsFore()
+        //{
+        //    List<int> result = new List<int>();
+        //    for (int i=0;i<=5; i++)
+        //    {
+        //        result.Add(IdIterator.GetNextId(i));
+        //    }
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual(4, result.Capacity);
+        //}
 
     }
 }

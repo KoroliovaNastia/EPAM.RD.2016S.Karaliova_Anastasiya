@@ -1,23 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAL.Infrastructure
+﻿namespace DAL.Infrastructure
 {
+    using System;
+
     [Serializable]
-    public class IdIterator//:IEnumerable<int>
+    public class IdIterator
     {
-        //private int limit;
-
-        //public IdIterator(int limit=1)
-        //{
-        //    if(limit<0)
-        //        throw new ArgumentException();
-        //    this.limit = limit;
-        //}
-
         public static bool IsPrime(int number)
         {
             if (number == 2)
@@ -31,30 +18,7 @@ namespace DAL.Infrastructure
             }
             return true;
         }
-        //public  IEnumerable<int> GetEnumerator(int start)
-        //{
-        //    if (start < 0)
-        //    {
-        //        throw new ArgumentException();
-        //    }
-        //    for (int i = start; i <= limit; i++)
-        //    {
-        //        if (IsPrime(i))
-        //            yield return i;
-
-        //    }
-
-        //}
-
-        //public IEnumerator<int> GetEnumerator()
-        //{
-        //    return GetEnumerator(1).GetEnumerator();
-        //}
-
-        //System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        
 
         public static int GetNextId(int prevId)
         {

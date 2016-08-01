@@ -1,18 +1,17 @@
-﻿using DAL.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using DAL.Infrastructure;
-using DAL.Interfaces;
-using DomainConfig;
-
-namespace SocketServer
+﻿namespace SocketServer
 {
+    using DAL.Configuration;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
+    using DAL.Infrastructure;
+    using DAL.Interfaces;
+    using DomainConfig;
+
     class Program
     {
         public static void Main(string[] args)

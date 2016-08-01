@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using DAL.Configuration;
-using DAL.Interfaces;
-using DAL.Entities;
-using DAL.Repository;
-
-namespace DAL.Infrastructure
+﻿namespace DAL.Infrastructure
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Threading;
+    using System.Xml.Serialization;
+    using Configuration;
+    using Interfaces;
+    using Entities;
+    using Repository;
+    using System.Xml;
+    using System.Xml.Linq;
+
     [Serializable]
     public class UserService : MarshalByRefObject, IUserService
     {
@@ -23,7 +22,6 @@ namespace DAL.Infrastructure
         static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
         private ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
         public ServiceConfigInfo ServiceConfigInfo { get; set; }
-        //public event EventHandler<ActionEventArgs> Message;
         public ServiceComunicator Comunicator { get; set; }
 
         public UserService()
@@ -146,7 +144,7 @@ namespace DAL.Infrastructure
                 readerWriterLock.ExitWriteLock();
             }
         }
-
+    
         private void OnMessage(ActionEventArgs e)
         {
             //if (Message != null) Message(this, e);

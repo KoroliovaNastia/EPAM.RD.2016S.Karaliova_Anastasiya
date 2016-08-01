@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAL.Infrastructure
+﻿namespace DAL.Infrastructure
 {
+    using System;
+
     [Serializable]
     public class ServiceComunicator
     {
         public event EventHandler<ActionEventArgs> Message;
-        //private Sender<BllUser> _sender;
-        public string sendMessage;
-        public void Send(ActionEventArgs args)
+
+        public string message;
+
+        public void Send(ActionEventArgs arg)
         {
-            sendMessage = args.Message;
+            message = arg.Message;
         }
 
         public string GetMessage()
         {
-            if (Message == null)
-                return "no action";
-            return sendMessage;
+            if (message == null)
+                return "no action before";
+            return message;
         }
     }
 }

@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Entities;
-using DAL.Interfaces;
-using DAL.Repository;
-using NLog;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Xml.Serialization;
-using DAL.Configuration;
-using System.Reflection;
-using System.Threading;
-
-namespace DAL.Infrastructure
+﻿namespace DAL.Infrastructure
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Entities;
+    using Interfaces;
+    using Repository;
+    using System.Configuration;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Xml.Serialization;
+    using DAL.Configuration;
+    using System.Threading;
+
     [Serializable]
     public class SlaveService: MarshalByRefObject,IUserService
     {
