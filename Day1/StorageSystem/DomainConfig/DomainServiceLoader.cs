@@ -1,12 +1,8 @@
-﻿using DAL.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DomainConfig
+﻿namespace DomainConfig
 {
+    using DAL.Infrastructure;
+    using System;
+
     public class DomainServiceLoader:MarshalByRefObject
     {
         public UserService LoadMaster()

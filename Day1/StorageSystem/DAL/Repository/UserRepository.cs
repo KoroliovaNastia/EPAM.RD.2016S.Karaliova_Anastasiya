@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using DAL.Entities;
-using DAL.Interfaces;
-using DAL.Infrastructure;
-using System.Configuration;
-using System.IO;
-
-namespace DAL.Repository
+﻿namespace DAL.Repository
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Entities;
+    using Interfaces;
+    using Infrastructure;
+    using System.Configuration;
+
     [Serializable]
     public class UserRepository:IRepository<User>
     {
@@ -34,7 +30,7 @@ namespace DAL.Repository
         public int Create(User user)
         {
             NLogger.Logger.Info("Repository: request to add user.");
-            if (!Users.Contains(user))
+            if (!Users.Contains(user) && new UserValidation().Validate(user))
             {
                 user.Id = IdIterator.GetNextId(LastId);
                 ConfigurationManager.AppSettings["Id"] = LastId.ToString();

@@ -41,6 +41,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\CustomSerializer.cs" />
+    <Compile Include="Configuration\ServiceConfigInfo.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Infrastructure\ActionEventArgs.cs" />
     <Compile Include="Infrastructure\IdIterator.cs" />
@@ -56,13 +58,14 @@
     <Compile Include="Configuration\ServiceCollection.cs" />
     <Compile Include="Configuration\ServiceElement.cs" />
     <Compile Include="Configuration\ServiceRegisterConfigSection.cs" />
+    <Compile Include="Infrastructure\ServiceComunicator.cs" />
     <Compile Include="Infrastructure\SlaveService.cs" />
     <Compile Include="Infrastructure\UserService.cs" />
+    <Compile Include="Infrastructure\UserValidation.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
-    <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
+    <Compile Include="Interfaces\IValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\EFUnitOfWork.cs" />
     <Compile Include="Repository\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>

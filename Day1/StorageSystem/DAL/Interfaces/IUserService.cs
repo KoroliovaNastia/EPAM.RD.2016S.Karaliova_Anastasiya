@@ -1,19 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Entities;
-
-namespace DAL.Interfaces
+﻿namespace DAL.Interfaces
 {
+    using System;
+    using System.Collections.Generic;
+    using Configuration;
+    using Entities;
+    using System.ServiceModel;
+
+    [ServiceContract]
     public interface IUserService
     {
+        [OperationContract]
         int AddUser(User user);
+        [OperationContract]
         IEnumerable<User> SearchForUsers(Func<User, bool> predicate);
+        [OperationContract]
         bool Delete(User user);
+        [OperationContract]
         void Load();
+        [OperationContract]
         void Save();
+        [OperationContract]
+        void AddConnectionInfo(ServiceConfigInfo info);
     }
 }

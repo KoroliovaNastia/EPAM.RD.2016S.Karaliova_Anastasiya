@@ -21,6 +21,7 @@ namespace DALTest
             User user3 = new User { FirstName = "Tim", LastName = "Rodny" };
             var res = new List<int> { repo.Create(user1), repo.Create(user2), repo.Create(user3) };
             UserService service = new UserService(repo);
+            service.Comunicator = new ServiceComunicator();
             SlaveService slave = new SlaveService(service);
             var result2 = slave.SearchForUsers(u => u.LastName == "Rich");
             Assert.AreEqual(3, res.Count);
@@ -34,6 +35,7 @@ namespace DALTest
         {
             UserRepository repo = new UserRepository();
             UserService service = new UserService(repo);
+            service.Comunicator = new ServiceComunicator();
             SlaveService slave = new SlaveService(service);
             slave.Load();
             Assert.IsNotNull(repo.Users);
@@ -45,6 +47,7 @@ namespace DALTest
         {
             UserRepository repository = new UserRepository();
             UserService service = new UserService(repository);
+            service.Comunicator = new ServiceComunicator();
             SlaveService slave = new SlaveService(service);
             slave.AddUser(new User() { FirstName = "Lisa", LastName = "Rich" });
         }
@@ -57,6 +60,7 @@ namespace DALTest
             User user = new User { FirstName = "Lisa", LastName = "Rich" };
             var res = repository.Create(user);
             UserService service = new UserService(repository);
+            service.Comunicator = new ServiceComunicator();
             SlaveService slave = new SlaveService(service);
             slave.Delete(user);
         }

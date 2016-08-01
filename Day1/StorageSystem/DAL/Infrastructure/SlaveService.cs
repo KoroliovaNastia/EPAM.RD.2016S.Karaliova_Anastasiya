@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Entities;
-using DAL.Interfaces;
-using DAL.Repository;
-using NLog;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Xml.Serialization;
-using DAL.Configuration;
-using System.Reflection;
-using System.Threading;
-
-namespace DAL.Infrastructure
+﻿namespace DAL.Infrastructure
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Entities;
+    using Interfaces;
+    using Repository;
+    using System.Configuration;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Xml.Serialization;
+    using DAL.Configuration;
+    using System.Threading;
+
     [Serializable]
     public class SlaveService: MarshalByRefObject,IUserService
     {
@@ -24,7 +20,8 @@ namespace DAL.Infrastructure
     
         static int slaveCount ;
         static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
-        //private Thread thread;
+        public ServiceConfigInfo ServiceConfigInfo { get; set; }
+        private ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
         public SlaveService()
         { }
         public SlaveService(UserService service)
@@ -43,11 +40,7 @@ namespace DAL.Infrastructure
                 throw new ArgumentException("There is no way to create more than 4 instances of Slave class");
             }
             slaveCount++;
-            service.Message += SlaveListener;
-           // AppDomain nd = AppDomain.CreateDomain(ServiceRegisterConfigSection.GetConfig().SectionInformation.SectionName);
-            //nd.CreateInstanceAndUnwrap(Assembly.GetEntryAssembly().FullName,typeof(SlaveService).FullName );
-            //Thread th=new Thread
-
+            service.Comunicator.Message+= SlaveListener;
         }
 
         public void SlaveListener(Object sender, ActionEventArgs eventArgs)
@@ -62,8 +55,16 @@ namespace DAL.Infrastructure
 
         public IEnumerable<User> SearchForUsers(Func<User, bool> predicate)
         {
-            NLogger.Logger.Info("Slave Service: request on adding user.");
-            return UserRepo.Find(predicate);
+            readerWriterLock.EnterReadLock();
+            try
+            {
+                NLogger.Logger.Info("Slave Service: request on adding user.");
+                return UserRepo.Find(predicate);
+            }
+            finally
+            {
+                readerWriterLock.ExitReadLock();
+            }
         }
 
         public bool Delete(User user)
@@ -74,32 +75,44 @@ namespace DAL.Infrastructure
 
         public void Load()
         {
-            var loader = new XmlSerializer(typeof(List<User>));
-            string file;
+            readerWriterLock.EnterReadLock();
             try
             {
-                file = ConfigurationManager.AppSettings["xmlfile"];
-            }
-            catch (ConfigurationException e)
-            {
-                if (dataSwitch.Enabled)
+                var loader = new XmlSerializer(typeof (List<User>));
+                string file;
+                try
                 {
-                    NLogger.Logger.Error("Slave Service: request to load failed:" + e.Message);
+                    file = ConfigurationManager.AppSettings["xmlfile"];
                 }
-                throw;
-            }
+                catch (ConfigurationException e)
+                {
+                    if (dataSwitch.Enabled)
+                    {
+                        NLogger.Logger.Error("Slave Service: request to load failed:" + e.Message);
+                    }
+                    throw;
+                }
 
-            using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
+                using (var fileStr = new FileStream(file, FileMode.OpenOrCreate))
+                {
+                    UserRepo.Users = (List<User>) loader.Deserialize(fileStr);
+                    UserRepo.LastId = UserRepo.Users.Last().Id;
+                }
+            }
+            finally
             {
-                UserRepo.Users = (List<User>)loader.Deserialize(fileStr);
-                UserRepo.LastId = UserRepo.Users.Last().Id;
-                //UserRepo.UserIterator.MoveNext();
+                readerWriterLock.ExitReadLock();
             }
         }
 
         public void Save()
         {
             throw new NotImplementedException();
+        }
+
+        public void AddConnectionInfo(ServiceConfigInfo info)
+        {
+            ServiceConfigInfo = info;
         }
     }
 }

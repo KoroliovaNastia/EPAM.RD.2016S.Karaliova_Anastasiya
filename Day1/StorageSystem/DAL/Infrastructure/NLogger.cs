@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NLog;
-
-namespace DAL.Infrastructure
+﻿namespace DAL.Infrastructure
 {
+    using System;
+    using NLog;
+
     [Serializable]
     public class NLogger
     {
