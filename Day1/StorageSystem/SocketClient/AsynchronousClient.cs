@@ -46,7 +46,7 @@ namespace SocketClient
             //           SocketType.Stream, ProtocolType.Tcp);
             //sockets.Add(client);
         }
-        public void StartClient(string message)
+        public void StartClient()
         {
             // Connect to a remote device.
             try
@@ -62,13 +62,13 @@ namespace SocketClient
                         new AsyncCallback(ConnectCallback), client);
                     connectDone.WaitOne();
 
-                    //Send test data to the remote device.
-                    Send(client, message);
-                    sendDone.WaitOne();
+                    ////Send test data to the remote device.
+                    //Send(client, message);
+                    //sendDone.WaitOne();
 
-                    // Receive the response from the remote device.
-                    Receive(client);
-                    receiveDone.WaitOne();
+                    //// Receive the response from the remote device.
+                    //Receive(client);
+                    //receiveDone.WaitOne();
 
                     //// Write the response to the console.
                     Console.WriteLine("Response received : {0}", response);
@@ -77,11 +77,13 @@ namespace SocketClient
                     //    var quit = Console.ReadKey();
                     //    if (quit.Key == ConsoleKey.Escape)
                     //        break;
+                    //    StartClient();
                     //}
                     // Release the socket.
-                    client.Shutdown(SocketShutdown.Both);
+                    //client.Shutdown(SocketShutdown.Both);
+                    
                 }
-               // Console.WriteLine("Enter to continue.");
+                Console.WriteLine("Enter to continue.");
 
                 Console.ReadKey();
                 //client.Close();

@@ -65,6 +65,7 @@ namespace SocketServer
 
                     // Wait until a connection is made before continuing.
                     allDone.WaitOne();
+                   
                 }
 
             }
@@ -90,8 +91,13 @@ namespace SocketServer
             // Create the state object.
             StateObject state = new StateObject();
             state.workSocket = handler;
-            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                new AsyncCallback(ReadCallback), state);
+            
+            
+                handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReadCallback), state);
+            
+            //handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+            // new AsyncCallback(ReadCallback), state);
         }
 
         public static void ReadCallback(IAsyncResult ar)
@@ -123,6 +129,9 @@ namespace SocketServer
                         content.Length, content);
                     // Echo the data back to the client.
                     Send(handler, content);
+                    //handler.EndReceive(ar);
+                    //handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    //new AsyncCallback(ReadCallback), state);
                 //}
                 //else
                 //{
@@ -154,8 +163,9 @@ namespace SocketServer
                 int bytesSent = handler.EndSend(ar);
                 Console.WriteLine("Sent {0} bytes to client.", bytesSent);
 
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
+                //handler.EndReceive(ar);
+                //handler.Shutdown(SocketShutdown.Both);
+                //handler.Close();
 
             }
             catch (Exception e)
