@@ -8,6 +8,9 @@
     using Infrastructure;
     using System.Configuration;
 
+    /// <summary>
+    /// User repoository
+    /// </summary>
     [Serializable]
     public class UserRepository:IRepository<User>
     {
@@ -27,6 +30,7 @@
             LastId = lastId;
             Users = new List<User>();
         }
+
         public int Create(User user)
         {
             NLogger.Logger.Info("Repository: request to add user.");
@@ -34,12 +38,13 @@
             {
                 user.Id = IdIterator.GetNextId(LastId);
                 ConfigurationManager.AppSettings["Id"] = LastId.ToString();
-                //user.Id = UserIterator.Current;
-                //UserIterator.MoveNext();
+                // user.Id = UserIterator.Current;
+                // UserIterator.MoveNext();
                 Users.Add(user);
                 NLogger.Logger.Info("Repository: user added.");
                 return user.Id;
             }
+
             NLogger.Logger.Info("Repository: this user already exist.");
             return -1;
         }
@@ -57,14 +62,11 @@
             {
                 Users.Remove(user);
                 NLogger.Logger.Info("Repository: user removed.");
+
                 return true;
             }
             NLogger.Logger.Info("Repository: this user doesn't exist.");
             return false;
         }
-
-       
-
-
     }
 }

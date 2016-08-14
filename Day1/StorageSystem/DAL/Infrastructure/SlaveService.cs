@@ -18,12 +18,14 @@
     {
         public UserRepository UserRepo { get; private set; }
     
-        static int slaveCount ;
-        static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
+        private static int slaveCount ;
+        private static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
         public ServiceConfigInfo ServiceConfigInfo { get; set; }
         private ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
-        public SlaveService()
-        { }
+        /// <summary>
+        /// Initialize a new instanse of the User
+        /// </summary>
+        public SlaveService(){ }
         public SlaveService(UserService service)
         {
             UserRepo = service.UserRepo;
@@ -34,11 +36,13 @@
                 if (items[i].ServiceType == "Slave")
                     sk++;
             }
+
             if (slaveCount >= sk)
             {
                 NLogger.Logger.Error("There is no way to create more than {0} instances of Slave class", sk);
                 throw new ArgumentException("There is no way to create more than 4 instances of Slave class");
             }
+
             slaveCount++;
             service.Comunicator.Message+= SlaveListener;
         }

@@ -32,6 +32,7 @@
         // The response from the remote device.
         private String response = String.Empty;
         public IEnumerable<ServiceConfigInfo> clientsInfo;
+        //public string Message { get; set; }
         //private string message;
         private List<Socket> sockets = new List<Socket>();
 
@@ -51,8 +52,7 @@
                 foreach (var clientInfo in clientsInfo)
                 {
                     // Create a TCP/IP socket.
-                    Socket client = new Socket(AddressFamily.InterNetwork,
-                               SocketType.Stream, ProtocolType.Tcp);
+                    Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     sockets.Add(client);
                     // Connect to the remote endpoint.
                     client.BeginConnect(clientInfo.IpEndPoint,
@@ -60,7 +60,7 @@
                     connectDone.WaitOne();
 
                     //Send test data to the remote device.
-                    //Send(client, message);
+                    //Send(client, Message);
                     //sendDone.WaitOne();
 
                     // Receive the response from the remote device.
@@ -68,7 +68,7 @@
                     //receiveDone.WaitOne();
 
                     //// Write the response to the console.
-                    Console.WriteLine("Response received : {0}", response);
+                    //Console.WriteLine("Response received : {0}", response);
                     //while (true)
                     //{
                     //    var quit = Console.ReadKey();
@@ -105,6 +105,8 @@
 
                 // Signal that the connection has been made.
                 connectDone.Set();
+
+               // Receive(client);
             }
             catch (Exception e)
             {
@@ -119,16 +121,16 @@
         //        ConnectCallback(ar);
         //    }
         //}
-        public void Recieve()
-        {
-            foreach (var socket in sockets)
-            {
-                Receive(socket);
-            }
-            //receiveDone.WaitOne();
-        }
+        //public void Recieve()
+        //{
+        //    foreach (var socket in sockets)
+        //    {
+        //        Receive(socket);
+        //    }
+        //    //receiveDone.WaitOne();
+        //}
 
-        private  void Receive(Socket client)
+        private void Receive(Socket client)
         {
             try
             {
@@ -139,7 +141,7 @@
                 // Begin receiving the data from the remote device.
                 client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
-                    Console.WriteLine("Response received : {0}", response);
+                Console.WriteLine("Response received : {0}", response);
             }
             catch (Exception e)
             {
@@ -159,14 +161,20 @@
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
 
+
+
                 if (bytesRead > 0)
                 {
+                    Array.Resize(ref state.buffer, bytesRead);
                     // There might be more data, so store the data received so far.
                     state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+
+                    Array.Resize(ref state.buffer, client.ReceiveBufferSize);
 
                     // Get the rest of the data.
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                         new AsyncCallback(ReceiveCallback), state);
+                    Console.WriteLine("Response received : {0}", response);
                 }
                 else
                 {
@@ -190,6 +198,7 @@
             // Convert the string data to byte data using ASCII encoding.
             byte[] byteData = Encoding.ASCII.GetBytes(data);
 
+            Console.WriteLine("The server holds the following operation : {0}", data);
             // Begin sending the data to the remote device.
             client.BeginSend(byteData, 0, byteData.Length, 0,
                 new AsyncCallback(SendCallback), client);
@@ -201,8 +210,10 @@
             foreach (var socket in sockets)
             {
                 Send(socket, data);
+                //Receive(socket);
             }
             //sendDone.WaitOne();
+            
         }
 
         private void SendCallback(IAsyncResult ar)

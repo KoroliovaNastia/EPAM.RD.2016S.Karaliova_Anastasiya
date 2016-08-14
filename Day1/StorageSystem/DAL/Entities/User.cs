@@ -1,6 +1,4 @@
-﻿
-
-namespace DAL.Entities
+﻿namespace DAL.Entities
 {
     using System;
     using System.Collections.Generic;
@@ -11,9 +9,12 @@ namespace DAL.Entities
     using System.Xml.Linq;
     using System.Xml;
 
+    /// <summary>
+    /// User class
+    /// </summary>
     [Serializable]
     [DataContract]
-    public class User//:IXmlSerializable
+    public class User : IXmlSerializable
     {
         [DataMember]
         public int Id { get; set; }
@@ -28,10 +29,15 @@ namespace DAL.Entities
         [DataMember]
         public List<Records> VisaRecords { get; set; }
 
+        /// <summary>
+        /// User ctor
+        /// </summary>
         public User()
         {
             VisaRecords = new List<Records>();
+            DateOfBirth = DateTime.Now;
         }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(obj, null)) return false;
@@ -57,10 +63,9 @@ namespace DAL.Entities
             {
                 var hash = (FirstName != null ? FirstName.GetHashCode() : 777) +
                            (LastName != null ? LastName.GetHashCode() : 777);
-                hash = hash*(DateOfBirth.DayOfYear ^ 777)+Gender.GetHashCode();
-            return hash;
+                hash = hash * (DateOfBirth.DayOfYear ^ 777) + Gender.GetHashCode();
+                return hash;
             }
-            
         }
 
         public System.Xml.Schema.XmlSchema GetSchema()
@@ -70,32 +75,32 @@ namespace DAL.Entities
 
         public void ReadXml(XmlReader reader)
         {
-            
 
-            //reader.ReadEndElement();
-            var doc = new XDocument();
+            while (reader.Read())
+            {
 
+                Id = Convert.ToInt32(reader["Id"]);
+                reader.ReadToFollowing("FirstName");
+                FirstName = reader.ReadElementContentAsString();
 
-            //int.TryParse(doc.Descendants("LastId").SingleOrDefault().Value, out this.lastUserId); 
-            List<User> users;
-            
+                LastName = reader.ReadElementContentAsString();
 
-                Id = Convert.ToInt32(reader.GetAttribute("Id"));
-                FirstName = reader.GetAttribute("FirstName");
-                LastName = reader.GetAttribute("LastName");
-                Gender = reader.GetAttribute("Gender") == "Male" ? Gender.Male : Gender.Female;
-                DateOfBirth =Convert.ToDateTime(reader.ReadElementString("DateOfBirth"))==null?DateTime.Now: Convert.ToDateTime(reader.ReadElementString("DateOfBirth"));
+                Gender = reader.ReadElementContentAsString() == "Male" ? Gender.Male : Gender.Female;
 
-                VisaRecords = reader.GetAttribute("Records").Select(vr => new Records
+                DateOfBirth = Convert.ToDateTime(reader.GetAttribute("Birthday"));
+                if (reader.ReadElementString() != null)
                 {
-                    Country = reader.GetAttribute("Country"),
-                    Start = Convert.ToDateTime(reader.GetAttribute("Start")),
-                    End = Convert.ToDateTime(reader.GetAttribute("Start"))
-                }).ToList();
-                
-            
-        }
 
+                    VisaRecords = reader.GetAttribute("Records").Select(vr => new Records
+                    {
+                        Country = reader.GetAttribute("Country"),
+                        Start = Convert.ToDateTime(reader.GetAttribute("Start")),
+                        End = Convert.ToDateTime(reader.GetAttribute("End"))
+                    }).ToList();
+
+                }
+            }
+        }
 
         /// <summary> 
         /// Converts an object into its XML representation. 
@@ -105,24 +110,32 @@ namespace DAL.Entities
         {
 
             writer.WriteAttributeString("Id", Id.ToString());
-                         writer.WriteAttributeString("FirstName", FirstName);
-                         writer.WriteAttributeString("LastName", LastName);
-                         writer.WriteAttributeString("Gender", Gender.ToString());
-                         if (DateOfBirth != DateTime.MinValue)
-                                 writer.WriteElementString("Birthday",
-                                     DateOfBirth.ToString("yyyy-MM-dd"));
-                         if (VisaRecords != null)
-                             {
-                                 foreach (var item in VisaRecords)
-                                     {
-                                         writer.WriteAttributeString("Country", item.Country);
-                                         writer.WriteAttributeString("VisaRecords Start", item.Start.ToString());
-                                         writer.WriteAttributeString("VisaRecords End", item.End.ToString());
-                                     }
-                             }
+            writer.WriteElementString("FirstName", FirstName);
+            writer.WriteElementString("LastName", LastName);
+            writer.WriteElementString("Gender", Gender.ToString());
+            if (DateOfBirth != DateTime.MinValue)
+            {
+                writer.WriteElementString("Birthday",
+                    DateOfBirth.ToString("yyyy-MM-dd"));
+            }
+
+            if (VisaRecords != null)
+            {
+                foreach (var item in VisaRecords)
+                {
+                    writer.WriteAttributeString("Country", item.Country);
+                    writer.WriteAttributeString("VisaRecords Start", item.Start.ToString());
+                    writer.WriteAttributeString("VisaRecords End", item.End.ToString());
+                }
+            }
+            else
+            {
+                writer.WriteAttributeString("VisaRecords ", "none");
+            }
 
         }
     }
+
     [Serializable]
     [DataContract]
     public enum Gender
@@ -132,6 +145,7 @@ namespace DAL.Entities
         [EnumMember]
         Female
     }
+
     [Serializable]
     [DataContract]
     public struct Records
@@ -143,5 +157,4 @@ namespace DAL.Entities
         [DataMember]
         public DateTime End { get; set; }
     }
-
 }

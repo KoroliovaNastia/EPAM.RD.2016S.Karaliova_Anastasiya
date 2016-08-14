@@ -19,15 +19,23 @@
     public class UserService : MarshalByRefObject, IUserService
     {
         public UserRepository UserRepo { get; private set; }
-        static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
+        private static BooleanSwitch dataSwitch = new BooleanSwitch("Data", "DataAccess module");
         private ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
         public ServiceConfigInfo ServiceConfigInfo { get; set; }
         public ServiceComunicator Comunicator { get; set; }
 
+        /// <summary>
+        /// Service ctor
+        /// </summary>
         public UserService()
         {
             UserRepo = new UserRepository();
         }
+
+        /// <summary>
+        /// Service ctor with parameters
+        /// </summary>
+        /// <param name="repository">User repository</param>
         public UserService(IRepository<User> repository)
         {
             UserRepo = (UserRepository)repository;
@@ -69,7 +77,6 @@
             readerWriterLock.EnterWriteLock();
             try
             {
-
                 NLogger.Logger.Info("Service: request to delete user.");
                 OnMessage(new ActionEventArgs{Message = "User deleted"});
                 return UserRepo.Delete(user);
@@ -98,6 +105,7 @@
                     {
                         NLogger.Logger.Error("Service: request to load failed:" + e.Message);
                     }
+
                     throw;
                 }
 
@@ -147,9 +155,7 @@
     
         private void OnMessage(ActionEventArgs e)
         {
-            //if (Message != null) Message(this, e);
             if(Comunicator!=null) Comunicator.Send(e);
-
         }
 
         public void AddConnectionInfo(ServiceConfigInfo info)

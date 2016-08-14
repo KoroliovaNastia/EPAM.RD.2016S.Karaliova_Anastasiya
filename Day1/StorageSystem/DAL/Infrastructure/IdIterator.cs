@@ -16,6 +16,7 @@
                 if (number % i == 0)
                     return false;
             }
+
             return true;
         }
         
@@ -26,7 +27,9 @@
             {
                 throw new ArgumentException();
             }
-            int nextId = prevId+1;
+
+            int nextId = prevId + 1;
+
             while (!IsPrime(nextId))
             {
                 nextId++;

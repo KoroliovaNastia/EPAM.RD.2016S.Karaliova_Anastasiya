@@ -1,13 +1,14 @@
-﻿namespace DAL.Infrastructure
+namespace DAL.Infrastructure
 {
     using System;
+    using DAL.Infrastructure;
 
     [Serializable]
     public class ServiceComunicator
     {
         public event EventHandler<ActionEventArgs> Message;
 
-        public string message;
+        private string message;
 
         public void Send(ActionEventArgs arg)
         {

@@ -4,8 +4,12 @@
     using Entities;
     using Interfaces;
 
+    /// <summary>
+    /// Simple validation
+    /// </summary>
     public class UserValidation:IValidator
     {
+
         public bool Validate(User user)
         {
             if (ReferenceEquals(user, null))

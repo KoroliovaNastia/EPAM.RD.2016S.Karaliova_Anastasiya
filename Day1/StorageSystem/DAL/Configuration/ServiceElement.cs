@@ -24,6 +24,7 @@
             get { return ((string)base["ip"]); }
             set { base["ip"] = value; }
         }
+
         [ConfigurationProperty("port", DefaultValue = 0, IsKey = false, IsRequired = false)]
         public int Port
         {

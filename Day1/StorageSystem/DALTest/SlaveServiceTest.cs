@@ -8,9 +8,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DALTest
 {
+    /// <summary>
+    /// Test of slave responsibility
+    /// </summary>
     [TestClass]
     public class SlaveServiceTest
     {
+        /// <summary>
+        /// Searching users
+        /// </summary>
         [TestMethod]
         public void Find_FindUserByLastName_ResultTwoUsers()
         {
@@ -30,6 +36,10 @@ namespace DALTest
             Assert.AreEqual("Rich", enumerable.First().LastName);
             Assert.AreEqual("Rich", enumerable.Last().LastName);
         }
+
+        /// <summary>
+        /// Loading data
+        /// </summary>
         [TestMethod]
         public void Load_LoadData()
         {
@@ -41,6 +51,9 @@ namespace DALTest
             Assert.IsNotNull(repo.Users);
         }
 
+        /// <summary>
+        /// Failed operations : add users. Slave hasn't permissions
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(NotImplementedException))]
         public void SlaveRepo_FailedAddUser()
@@ -52,6 +65,9 @@ namespace DALTest
             slave.AddUser(new User() { FirstName = "Lisa", LastName = "Rich" });
         }
 
+        /// <summary>
+        /// Failed operations : delete users. Slave hasn't permissions
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(NotImplementedException))]
         public void SlaveRepo_FailedDeleteUser()
